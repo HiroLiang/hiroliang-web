@@ -13,40 +13,22 @@ import {
 export function AppLayout() {
   const { locale, setLocale } = useLocale()
   const t = useMessages()
-  const navigationItems = [
-    { label: t.nav.home, to: '/' },
-    { label: t.nav.project, to: '/project' },
-  ]
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <div className="mx-auto flex min-h-screen w-full max-w-5xl flex-col px-4 pb-14 pt-7 sm:px-6 lg:px-8">
-        <header className="mb-12 flex flex-col gap-4 border-b border-border/70 pb-5 sm:flex-row sm:items-center sm:justify-between">
+    <div className="h-screen overflow-hidden bg-background text-foreground">
+      <div className="flex h-screen w-full flex-col overflow-hidden px-4 pb-4 pt-4 sm:px-5 lg:px-6">
+        <header className="mb-4 flex flex-col gap-4 border-b border-border/70 pb-4 sm:flex-row sm:items-center sm:justify-between">
           <NavLink
-            className="text-sm font-semibold uppercase tracking-[0.18em] text-foreground"
+            className="flex flex-wrap items-baseline gap-x-3 gap-y-1"
             to="/"
           >
-            Hiro Liang
+            <span className="text-sm font-semibold uppercase tracking-[0.18em] text-foreground">
+              Hiro Liang
+            </span>
           </NavLink>
 
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
             <nav className="flex flex-wrap gap-5 text-sm">
-              {navigationItems.map((item) => (
-                <NavLink
-                  key={item.to}
-                  className={({ isActive }) =>
-                    [
-                      'relative text-muted-foreground transition-colors duration-150 hover:text-foreground',
-                      "after:absolute after:-bottom-2 after:left-0 after:h-px after:w-full after:origin-left after:bg-accent after:transition-transform after:duration-150 after:content-['']",
-                      isActive ? 'text-foreground after:scale-x-100' : 'after:scale-x-0',
-                    ].join(' ')
-                  }
-                  to={item.to}
-                >
-                  {item.label}
-                </NavLink>
-              ))}
-
               <a
                 className="text-muted-foreground transition-colors duration-150 hover:text-foreground"
                 href="https://github.com/HiroLiang"
@@ -71,7 +53,7 @@ export function AppLayout() {
           </div>
         </header>
 
-        <main className="mx-auto w-full max-w-3xl flex-1">
+        <main className="flex min-h-0 flex-1 overflow-hidden">
           <Outlet />
         </main>
       </div>

@@ -10,6 +10,14 @@ export type MessageDictionary = {
     project: string
   }
   home: {
+    chat: {
+      errorFallback: string
+      introMessage: string
+      inputPlaceholder: string
+      send: string
+      streaming: string
+      unknownCommand: string
+    }
     experience: {
       body1: string
       body2: string
@@ -36,10 +44,33 @@ export type MessageDictionary = {
       eyebrow: string
       title: string
     }
+    panels: {
+      experiences: {
+        description: string
+        title: string
+      }
+      github: {
+        body: string
+        cta: string
+        eyebrow: string
+        title: string
+      }
+      profile: {
+        body: string
+        skillsLabel: string
+        title: string
+      }
+      projects: {
+        description: string
+        title: string
+      }
+    }
   }
   project: {
     backHome: string
+    ctaGithub: string
     detectedEnvironment: string
+    selectorLabel: string
     hero: {
       body: string
       eyebrow: string

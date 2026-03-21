@@ -13,6 +13,14 @@ export const enMessages: MessageDictionary = {
     project: 'Project',
   },
   home: {
+    chat: {
+      errorFallback: 'The server did not return a usable reply.',
+      introMessage: "Hi, my name is Hiro Liang. I'm a software engineer building practical systems and tools.",
+      inputPlaceholder: 'try /profile',
+      send: 'Send',
+      streaming: 'Assistant is typing…',
+      unknownCommand: 'Unknown command. Try /profile, /github, /projects, or /experiences.',
+    },
     experience: {
       body1:
         'In December 2023, I stepped into a Backend Java Team Leader role and later transitioned into a vendor position, where I support the development and architecture of a major bank application system.',
@@ -43,10 +51,33 @@ export const enMessages: MessageDictionary = {
       eyebrow: 'Technical Focus',
       title: 'Core stack with room for exploration.',
     },
+    panels: {
+      experiences: {
+        description: 'Delivery experience, architecture ownership, and platform execution across banking systems.',
+        title: 'Experiences',
+      },
+      github: {
+        body: 'GitHub is where I publish experiments, desktop tooling, and the work that supports this portfolio direction.',
+        cta: 'Open GitHub profile',
+        eyebrow: 'External',
+        title: 'GitHub',
+      },
+      profile: {
+        body: 'A concise profile view that combines the hero, summary, and technical focus into one command-driven panel.',
+        skillsLabel: 'Core tools',
+        title: 'Profile',
+      },
+      projects: {
+        description: 'Featured project details with environment-aware downloads and practical context.',
+        title: 'Projects',
+      },
+    },
   },
   project: {
     backHome: 'Back to home',
+    ctaGithub: 'View source and updates on GitHub',
     detectedEnvironment: 'Detected environment',
+    selectorLabel: 'Projects',
     hero: {
       body: 'A desktop release with separate installers for macOS and Windows, presented in a simple page that adapts to the device you are currently using.',
       eyebrow: 'Featured Project',

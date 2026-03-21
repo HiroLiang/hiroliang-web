@@ -13,6 +13,14 @@ export const zhTWMessages: MessageDictionary = {
     project: '作品',
   },
   home: {
+    chat: {
+      errorFallback: '伺服器沒有回傳可顯示的內容。',
+      introMessage: 'Hi, my name is Hiro Liang. I am a software engineer building practical systems and tools.',
+      inputPlaceholder: 'try /profile',
+      send: '送出',
+      streaming: '助理正在輸入…',
+      unknownCommand: '找不到這個指令，請試試 /profile、/github、/projects 或 /experiences。',
+    },
     experience: {
       body1:
         '我在 2023 年 12 月開始擔任 Backend Java Team Leader，之後也轉為 vendor 角色，持續參與大型銀行申辦系統的開發與架構規劃。',
@@ -43,10 +51,33 @@ export const zhTWMessages: MessageDictionary = {
       eyebrow: '技術重點',
       title: '核心技術堆疊與持續探索。',
     },
+    panels: {
+      experiences: {
+        description: '聚焦銀行系統中的交付經驗、架構責任與平台推進。',
+        title: '經歷',
+      },
+      github: {
+        body: 'GitHub 會放我持續整理的實驗作品、桌面工具與這個作品站相關開發方向。',
+        cta: '前往 GitHub 個人頁',
+        eyebrow: '外部連結',
+        title: 'GitHub',
+      },
+      profile: {
+        body: '把首頁 hero、摘要與技術重點整合成一個可由指令呼叫的個人介紹區塊。',
+        skillsLabel: '核心工具',
+        title: '個人介紹',
+      },
+      projects: {
+        description: '展示精選作品內容，並保留依裝置顯示下載資訊的能力。',
+        title: '作品',
+      },
+    },
   },
   project: {
     backHome: '回到首頁',
+    ctaGithub: '到 GitHub 查看原始碼與更新',
     detectedEnvironment: '目前偵測裝置',
+    selectorLabel: 'Projects',
     hero: {
       body: '這是一個桌面版聊天應用釋出頁，提供 macOS 與 Windows 的獨立安裝檔，並會依你目前的裝置顯示相應內容。',
       eyebrow: '精選作品',

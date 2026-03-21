@@ -38,3 +38,13 @@ VITE_API_BASE_URL=   # Backend API base URL
 **Features:** Feature-specific logic lives in `src/features/<feature>/`. Currently `src/features/project/use-detected-platform.ts` detects mac/windows/mobile/desktop from `navigator`.
 
 **Path alias:** `@/` maps to `src/`.
+
+## Current product direction
+
+- The homepage is the main product surface and should remain chat-first: `Navbar + chat window + single active content block`.
+- Slash commands currently drive content switching inside the homepage. Supported commands are `/profile`, `/github`, `/projects`, and `/experiences`.
+- Content blocks should be componentized and backed by shared typed content/config so the homepage and legacy routes can reuse the same presentation logic.
+- Content block transitions should stay single-panel: close the current block first, then expand the next block from the center.
+- Plain messages without a leading slash should go through the frontend chat API layer and render with streaming-style updates in the UI.
+- Backend routing, Cloudflare Tunnel, and GCP forwarding are handled outside this repository. This app only needs to call the configured API base URL.
+- The existing `/project` route is kept as a secondary/transition surface, but the homepage should be treated as the primary entry point for future work.
