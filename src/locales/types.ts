@@ -68,9 +68,45 @@ export type MessageDictionary = {
   }
   project: {
     backHome: string
+    backToProjects: string
     ctaGithub: string
     detectedEnvironment: string
+    downloadsSectionTitle: string
+    linkSectionTitle: string
+    overviewSectionTitle: string
+    projects: {
+      plantCare: {
+        githubCta: string
+        sections: {
+          architecture: {
+            body: string
+            title: string
+          }
+          intro: {
+            body: string
+            title: string
+          }
+          repoValue: {
+            body: string
+            title: string
+          }
+        }
+        summary: string
+        title: string
+      }
+      tentservChat: {
+        sections: {
+          overview: {
+            body1: string
+            body2: string
+          }
+        }
+        summary: string
+        title: string
+      }
+    }
     selectorLabel: string
+    selectorPrompt: string
     hero: {
       body: string
       eyebrow: string

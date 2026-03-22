@@ -17,8 +17,13 @@ export type ChatMessage = {
   status?: ChatMessageStatus
 }
 
+export type ProjectDetailSection = {
+  bodyKey: string
+  titleKey: string
+}
+
 export type ProjectEntry = {
+  githubUrl: string
   id: string
-  name: string
   supportsDownloads?: boolean
 }

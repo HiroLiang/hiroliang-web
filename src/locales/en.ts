@@ -18,8 +18,8 @@ export const enMessages: MessageDictionary = {
       introMessage: "Hi, my name is Hiro Liang. I'm a software engineer building practical systems and tools.",
       inputPlaceholder: 'try /profile',
       send: 'Send',
-      streaming: 'Assistant is typing…',
-      unknownCommand: 'Unknown command. Try /profile, /github, /projects, or /experiences.',
+      streaming: 'Streaming…',
+      unknownCommand: 'Unknown command. Try /profile, /github, /projects, /experiences, or /clean.',
     },
     experience: {
       body1:
@@ -75,9 +75,45 @@ export const enMessages: MessageDictionary = {
   },
   project: {
     backHome: 'Back to home',
+    backToProjects: 'Back to projects',
     ctaGithub: 'View source and updates on GitHub',
     detectedEnvironment: 'Detected environment',
+    downloadsSectionTitle: 'Downloads',
+    linkSectionTitle: 'Links',
+    overviewSectionTitle: 'Overview',
+    projects: {
+      plantCare: {
+        githubCta: 'Open plant-care on GitHub',
+        sections: {
+          architecture: {
+            body: 'The repository is organized around a clear data path: STM32 devices publish sensor data over CAN bus, Raspberry Pi services convert that into gRPC and HTTP APIs, and the React UI consumes those APIs for monitoring and control.',
+            title: 'Architecture',
+          },
+          intro: {
+            body: 'Plant Care System is an IoT monorepo for plant monitoring and control built around Raspberry Pi and STM32 hardware, with separate services for device communication, monitoring APIs, command flows, and the web interface.',
+            title: 'Project Intro',
+          },
+          repoValue: {
+            body: 'It is structured as a multi-service workspace with shared contracts, generated protobuf stubs, and clean-architecture-style Python services, making it a strong example of service boundaries and hardware-aware backend design.',
+            title: 'Repository Value',
+          },
+        },
+        summary: 'An IoT monorepo for plant monitoring and control on Raspberry Pi + STM32 hardware.',
+        title: 'Plant Care System',
+      },
+      tentservChat: {
+        sections: {
+          overview: {
+            body1: 'Tentserv Chat is a desktop-focused chat application designed to keep the installation flow simple while still adapting to the device you are using.',
+            body2: 'The project balances a practical release workflow with a clean delivery experience, so the same page can guide Mac, Windows, and unsupported mobile visitors with the right next step.',
+          },
+        },
+        summary: 'A desktop-focused chat application with environment-aware downloads for macOS and Windows.',
+        title: 'Tentserv Chat',
+      },
+    },
     selectorLabel: 'Projects',
+    selectorPrompt: 'Choose a project to open its detail view.',
     hero: {
       body: 'A desktop release with separate installers for macOS and Windows, presented in a simple page that adapts to the device you are currently using.',
       eyebrow: 'Featured Project',

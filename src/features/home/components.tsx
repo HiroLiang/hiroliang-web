@@ -1,4 +1,4 @@
-import { type ReactNode, useState } from 'react'
+import { type ReactNode, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
@@ -106,7 +106,7 @@ export function GithubPanel() {
   )
 }
 
-function ProjectDownloadSection() {
+function ProjectDownloadContent() {
   const platform = useDetectedPlatform()
   const t = useMessages()
   const platformLabels = t.project.platforms.labels
@@ -119,7 +119,7 @@ function ProjectDownloadSection() {
   }[platform]
 
   return (
-    <SectionShell>
+    <div className="space-y-4">
       <p className="text-sm text-muted-foreground">
         {t.project.detectedEnvironment}:{' '}
         <strong className="text-foreground">{platformLabels[platform]}</strong>
@@ -154,29 +154,37 @@ function ProjectDownloadSection() {
           </Button>
         </div>
       ) : null}
-    </SectionShell>
+    </div>
   )
 }
 
-function ProjectDetail({ project, showRouteLink = false }: { project: ProjectEntry; showRouteLink?: boolean }) {
+function TentservProjectDetail({ project, showRouteLink = false }: { project: ProjectEntry; showRouteLink?: boolean }) {
   const t = useMessages()
-
-  if (project.id !== 'tentserv-chat') {
-    return null
-  }
+  const content = t.project.projects.tentservChat
 
   return (
-    <div className="space-y-4">
-      <SectionShell>
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
-          {t.project.hero.eyebrow}
-        </p>
-        <h2 className="text-3xl font-semibold leading-tight tracking-[-0.02em] text-foreground">
-          {project.name}
-        </h2>
-        <p className="text-base leading-8 text-muted-foreground">{t.home.panels.projects.description}</p>
-        <p className="text-base leading-8 text-muted-foreground">{t.project.hero.body}</p>
-        <p className="text-base leading-8 text-muted-foreground">{t.project.intro}</p>
+    <SectionShell>
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
+        {t.project.hero.eyebrow}
+      </p>
+      <h2 className="text-3xl font-semibold leading-tight tracking-[-0.02em] text-foreground">
+        {content.title}
+      </h2>
+      <p className="text-base leading-8 text-muted-foreground">{content.summary}</p>
+
+      <div className="space-y-3">
+        <h3 className="text-lg font-semibold text-foreground">{t.project.overviewSectionTitle}</h3>
+        <p className="text-base leading-8 text-muted-foreground">{content.sections.overview.body1}</p>
+        <p className="text-base leading-8 text-muted-foreground">{content.sections.overview.body2}</p>
+      </div>
+
+      <div className="space-y-3">
+        <h3 className="text-lg font-semibold text-foreground">{t.project.downloadsSectionTitle}</h3>
+        {project.supportsDownloads ? <ProjectDownloadContent /> : null}
+      </div>
+
+      <div className="space-y-3">
+        <h3 className="text-lg font-semibold text-foreground">{t.project.linkSectionTitle}</h3>
         <div className="flex flex-wrap gap-3 pt-1">
           <Button asChild variant="outline">
             <a href={TENTSERV_CHAT_REPOSITORY_URL} rel="noreferrer" target="_blank">
@@ -189,63 +197,137 @@ function ProjectDetail({ project, showRouteLink = false }: { project: ProjectEnt
             </Button>
           ) : null}
         </div>
-      </SectionShell>
-
-      {project.supportsDownloads ? <ProjectDownloadSection /> : null}
-    </div>
+      </div>
+    </SectionShell>
   )
 }
 
-export function ProjectsPanel({ showRouteLink = false }: { showRouteLink?: boolean }) {
+function PlantCareProjectDetail({ project }: { project: ProjectEntry }) {
   const t = useMessages()
-  const [selectedProjectId, setSelectedProjectId] = useState(PROJECT_ENTRIES[0]?.id ?? '')
+  const content = t.project.projects.plantCare
+
+  return (
+    <SectionShell>
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
+        {t.project.selectorLabel}
+      </p>
+      <h2 className="text-3xl font-semibold leading-tight tracking-[-0.02em] text-foreground">
+        {content.title}
+      </h2>
+      <p className="text-base leading-8 text-muted-foreground">{content.summary}</p>
+
+      <div className="space-y-3">
+        <h3 className="text-lg font-semibold text-foreground">{content.sections.intro.title}</h3>
+        <p className="text-base leading-8 text-muted-foreground">{content.sections.intro.body}</p>
+      </div>
+      <div className="space-y-3">
+        <h3 className="text-lg font-semibold text-foreground">{content.sections.architecture.title}</h3>
+        <p className="text-base leading-8 text-muted-foreground">{content.sections.architecture.body}</p>
+      </div>
+      <div className="space-y-3">
+        <h3 className="text-lg font-semibold text-foreground">{content.sections.repoValue.title}</h3>
+        <p className="text-base leading-8 text-muted-foreground">{content.sections.repoValue.body}</p>
+      </div>
+
+      <div className="space-y-3">
+        <h3 className="text-lg font-semibold text-foreground">{t.project.linkSectionTitle}</h3>
+        <div className="flex flex-wrap gap-3 pt-1">
+          <Button asChild variant="outline">
+            <a href={project.githubUrl} rel="noreferrer" target="_blank">
+              {content.githubCta}
+            </a>
+          </Button>
+        </div>
+      </div>
+    </SectionShell>
+  )
+}
+
+function ProjectDetail({ project, showRouteLink = false }: { project: ProjectEntry; showRouteLink?: boolean }) {
+  switch (project.id) {
+    case 'tentserv-chat':
+      return <TentservProjectDetail project={project} showRouteLink={showRouteLink} />
+    case 'plant-care':
+      return <PlantCareProjectDetail project={project} />
+    default:
+      return null
+  }
+}
+
+export function ProjectsPanel({
+  initialProjectId,
+  resetToken = 0,
+  showRouteLink = false,
+  startWithSelector = true,
+}: {
+  initialProjectId?: ProjectEntry['id']
+  resetToken?: number
+  showRouteLink?: boolean
+  startWithSelector?: boolean
+}) {
+  const t = useMessages()
+  const [selectedProjectId, setSelectedProjectId] = useState(initialProjectId ?? PROJECT_ENTRIES[0]?.id ?? '')
+  const [isSelectorOpen, setIsSelectorOpen] = useState(startWithSelector)
   const selectedProject =
     PROJECT_ENTRIES.find((project) => project.id === selectedProjectId) ?? PROJECT_ENTRIES[0]
 
+  useEffect(() => {
+    if (startWithSelector) {
+      setIsSelectorOpen(true)
+    }
+  }, [resetToken, startWithSelector])
+
   return (
     <div className="space-y-4">
-      <SectionShell>
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">{t.project.selectorLabel}</p>
-        <h2 className="text-2xl font-semibold leading-tight tracking-[-0.02em] text-foreground">
-          {t.home.panels.projects.title}
-        </h2>
-        <p className="text-base leading-8 text-muted-foreground">{t.home.panels.projects.description}</p>
-        <div className="flex flex-wrap gap-3">
-          {PROJECT_ENTRIES.map((project) => {
-            const isSelected = project.id === selectedProject?.id
-
-            return (
+      {isSelectorOpen ? (
+        <SectionShell>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">{t.project.selectorLabel}</p>
+          <h2 className="text-2xl font-semibold leading-tight tracking-[-0.02em] text-foreground">
+            {t.home.panels.projects.title}
+          </h2>
+          <p className="text-base leading-8 text-muted-foreground">{t.project.selectorPrompt}</p>
+          <div className="flex flex-wrap gap-3">
+            {PROJECT_ENTRIES.map((project) => (
               <button
                 key={project.id}
-                className={[
-                  'rounded-full border px-4 py-2 text-sm font-medium transition-colors',
-                  isSelected
-                    ? 'border-accent bg-accent text-accent-foreground'
-                    : 'border-border bg-background/40 text-foreground hover:bg-secondary',
-                ].join(' ')}
-                onClick={() => setSelectedProjectId(project.id)}
+                className="rounded-full border border-border bg-background/40 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
+                onClick={() => {
+                  setSelectedProjectId(project.id)
+                  setIsSelectorOpen(false)
+                }}
                 type="button"
               >
-                {project.name}
+                {project.id === 'tentserv-chat'
+                  ? t.project.projects.tentservChat.title
+                  : t.project.projects.plantCare.title}
               </button>
-            )
-          })}
-        </div>
-      </SectionShell>
+            ))}
+          </div>
+        </SectionShell>
+      ) : null}
 
-      {selectedProject ? <ProjectDetail project={selectedProject} showRouteLink={showRouteLink} /> : null}
+      {!isSelectorOpen && selectedProject ? (
+        <div className="space-y-4">
+          <div className="flex">
+            <Button onClick={() => setIsSelectorOpen(true)} type="button" variant="ghost">
+              {t.project.backToProjects}
+            </Button>
+          </div>
+          <ProjectDetail project={selectedProject} showRouteLink={showRouteLink} />
+        </div>
+      ) : null}
     </div>
   )
 }
 
-export function HomePanelContent({ panel }: { panel: HomePanelType }) {
+export function HomePanelContent({ panel, resetToken = 0 }: { panel: HomePanelType; resetToken?: number }) {
   switch (panel) {
     case 'profile':
       return <ProfilePanel />
     case 'github':
       return <GithubPanel />
     case 'projects':
-      return <ProjectsPanel />
+      return <ProjectsPanel resetToken={resetToken} />
     case 'experiences':
       return <ExperiencesPanel />
     default:

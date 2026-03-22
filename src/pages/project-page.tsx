@@ -8,7 +8,7 @@ export function ProjectPage() {
 
   return (
     <div className="space-y-8">
-      <ProjectsPanel />
+      <ProjectsPanel initialProjectId="tentserv-chat" startWithSelector={false} showRouteLink={false} />
 
       <section className="space-y-4">
         <Link className="text-base font-semibold text-accent transition-colors hover:text-accent/80" to="/">

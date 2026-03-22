@@ -18,8 +18,8 @@ export const zhTWMessages: MessageDictionary = {
       introMessage: 'Hi, my name is Hiro Liang. I am a software engineer building practical systems and tools.',
       inputPlaceholder: 'try /profile',
       send: '送出',
-      streaming: '助理正在輸入…',
-      unknownCommand: '找不到這個指令，請試試 /profile、/github、/projects 或 /experiences。',
+      streaming: '串流輸出中…',
+      unknownCommand: '找不到這個指令，請試試 /profile、/github、/projects、/experiences 或 /clean。',
     },
     experience: {
       body1:
@@ -63,7 +63,7 @@ export const zhTWMessages: MessageDictionary = {
         title: 'GitHub',
       },
       profile: {
-        body: '把首頁 hero、摘要與技術重點整合成一個可由指令呼叫的個人介紹區塊。',
+        body: '把首頁、摘要與技術重點整合成一個可由指令呼叫的個人介紹區塊。',
         skillsLabel: '核心工具',
         title: '個人介紹',
       },
@@ -75,9 +75,45 @@ export const zhTWMessages: MessageDictionary = {
   },
   project: {
     backHome: '回到首頁',
+    backToProjects: '返回作品選單',
     ctaGithub: '到 GitHub 查看原始碼與更新',
     detectedEnvironment: '目前偵測裝置',
+    downloadsSectionTitle: '下載說明',
+    linkSectionTitle: '相關連結',
+    overviewSectionTitle: '專案介紹',
+    projects: {
+      plantCare: {
+        githubCta: '前往 plant-care GitHub',
+        sections: {
+          architecture: {
+            body: '整個倉庫沿著清楚的資料流拆分：STM32 透過 CAN bus 發送感測資料，Raspberry Pi 上的服務再轉成 gRPC 與 HTTP API，最後由 React UI 負責監控與控制介面。',
+            title: '架構摘要',
+          },
+          intro: {
+            body: 'Plant Care System 是一個以 Raspberry Pi 與 STM32 硬體為核心的植物監控與控制 IoT monorepo，將裝置通訊、監控 API、控制流程與 web UI 拆成不同服務來協作。',
+            title: '專案介紹',
+          },
+          repoValue: {
+            body: '它同時整理了 shared contracts、protobuf stubs 與 clean architecture 風格的 Python service 結構，是一個很完整的硬體整合與服務切分設計範例。',
+            title: '倉庫價值',
+          },
+        },
+        summary: '一個建立在 Raspberry Pi + STM32 硬體上的植物監控與控制 IoT monorepo。',
+        title: 'Plant Care System',
+      },
+      tentservChat: {
+        sections: {
+          overview: {
+            body1: 'Tentserv Chat 是一個以桌面使用情境為主的聊天應用，目標是在保持安裝流程簡潔的同時，依照使用裝置提供合適的下一步。',
+            body2: '它把實際可交付的桌面版本體驗與清楚的釋出流程整理在同一頁，讓 Mac、Windows 與不支援的行動裝置都能得到對應的說明。',
+          },
+        },
+        summary: '一個會依照裝置環境提供 macOS 與 Windows 下載引導的桌面聊天應用。',
+        title: 'Tentserv Chat',
+      },
+    },
     selectorLabel: 'Projects',
+    selectorPrompt: '先選擇一個 project，再開啟它的介紹內容。',
     hero: {
       body: '這是一個桌面版聊天應用釋出頁，提供 macOS 與 Windows 的獨立安裝檔，並會依你目前的裝置顯示相應內容。',
       eyebrow: '精選作品',

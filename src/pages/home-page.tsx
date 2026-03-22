@@ -8,7 +8,9 @@ import type { ChatMessage, HomeCommand, HomePanelType, PanelPhase } from '@/feat
 import { useMessages } from '@/hooks/use-locale'
 
 const PANEL_TRANSITION_MS = 260
-const INTRO_STREAM_DELAY_MS = 24
+const INTRO_MIN_STREAM_DELAY_MS = 12
+const INTRO_MAX_STREAM_DELAY_MS = 34
+const STREAMING_BUILDUP_FRAMES = ['loadin', 'loading', 'loading.', 'loading..', 'loading...'] as const
 
 function createMessage(role: ChatMessage['role'], content: string, status: ChatMessage['status'] = 'idle'): ChatMessage {
   return {
@@ -43,21 +45,29 @@ function bubbleClassName(role: ChatMessage['role'], status: ChatMessage['status'
   return 'mr-auto border border-border/70 bg-secondary/80 text-foreground'
 }
 
+function getTypingDelay(character: string) {
+  if (character === ' ' || character === '\n') {
+    return 8
+  }
+
+  if ([',', '.', '!', '?'].includes(character)) {
+    return 46
+  }
+
+  return INTRO_MIN_STREAM_DELAY_MS + Math.floor(Math.random() * (INTRO_MAX_STREAM_DELAY_MS - INTRO_MIN_STREAM_DELAY_MS + 1))
+}
+
 export function HomePage() {
   const t = useMessages()
   const [inputValue, setInputValue] = useState('')
+  const [introSeed, setIntroSeed] = useState(0)
   const introMessageIdRef = useRef(crypto.randomUUID())
-  const [messages, setMessages] = useState<ChatMessage[]>(() => [
-    {
-      content: '',
-      id: introMessageIdRef.current,
-      role: 'assistant',
-      status: 'streaming',
-    },
-  ])
+  const [messages, setMessages] = useState<ChatMessage[]>(() => [])
   const [activePanel, setActivePanel] = useState<HomePanelType | null>(null)
   const [panelPhase, setPanelPhase] = useState<PanelPhase>('idle')
+  const [panelResetToken, setPanelResetToken] = useState(0)
   const [isStreaming, setIsStreaming] = useState(false)
+  const [streamingComposerText, setStreamingComposerText] = useState('')
   const [isCommandMenuDismissed, setIsCommandMenuDismissed] = useState(false)
   const [highlightedCommandIndex, setHighlightedCommandIndex] = useState(0)
   const timeoutRef = useRef<number | null>(null)
@@ -78,6 +88,10 @@ export function HomePage() {
   }, [inputValue])
 
   const isCommandMenuOpen = inputValue.startsWith('/') && !isCommandMenuDismissed && filteredCommands.length > 0
+  const isIntroStreaming = messages.some(
+    (message) => message.id === introMessageIdRef.current && message.status === 'streaming',
+  )
+  const isAnyStreaming = isStreaming || isIntroStreaming
 
   useEffect(() => {
     return () => {
@@ -88,22 +102,22 @@ export function HomePage() {
   }, [])
 
   useEffect(() => {
+    const nextIntroId = crypto.randomUUID()
+    introMessageIdRef.current = nextIntroId
+
+    setMessages([
+      {
+        content: '',
+        id: nextIntroId,
+        role: 'assistant',
+        status: 'streaming',
+      },
+    ])
+
     let cancelled = false
 
     async function streamIntro() {
       const fullText = t.home.chat.introMessage
-
-      setMessages((current) =>
-        current.map((message) =>
-          message.id === introMessageIdRef.current
-            ? {
-                ...message,
-                content: '',
-                status: 'streaming',
-              }
-            : message,
-        ),
-      )
 
       for (let index = 1; index <= fullText.length; index += 1) {
         if (cancelled) {
@@ -111,7 +125,7 @@ export function HomePage() {
         }
 
         await new Promise((resolve) => {
-          window.setTimeout(resolve, INTRO_STREAM_DELAY_MS)
+          window.setTimeout(resolve, getTypingDelay(fullText[index - 1] ?? ''))
         })
 
         setMessages((current) =>
@@ -133,7 +147,47 @@ export function HomePage() {
     return () => {
       cancelled = true
     }
-  }, [t.home.chat.introMessage])
+  }, [introSeed, t.home.chat.introMessage])
+
+  useEffect(() => {
+    if (!isAnyStreaming) {
+      setStreamingComposerText('')
+      return
+    }
+
+    let cancelled = false
+
+    async function runStreamingComposer() {
+      for (const frame of STREAMING_BUILDUP_FRAMES) {
+        if (cancelled) {
+          return
+        }
+
+        setStreamingComposerText(frame)
+
+        await new Promise((resolve) => {
+          window.setTimeout(resolve, 130)
+        })
+      }
+
+      while (!cancelled) {
+        const randomFrame =
+          STREAMING_BUILDUP_FRAMES[1 + Math.floor(Math.random() * (STREAMING_BUILDUP_FRAMES.length - 1))]
+
+        setStreamingComposerText(randomFrame)
+
+        await new Promise((resolve) => {
+          window.setTimeout(resolve, 150 + Math.floor(Math.random() * 180))
+        })
+      }
+    }
+
+    void runStreamingComposer()
+
+    return () => {
+      cancelled = true
+    }
+  }, [isAnyStreaming])
 
   useEffect(() => {
     if (!isCommandMenuOpen) {
@@ -160,7 +214,7 @@ export function HomePage() {
       behavior: 'smooth',
       top: viewport.scrollHeight,
     })
-  }, [activePanel, isStreaming, messages, panelPhase])
+  }, [activePanel, isStreaming, messages, panelPhase, panelResetToken])
 
   function schedulePanelIdle() {
     timeoutRef.current = window.setTimeout(() => {
@@ -192,6 +246,13 @@ export function HomePage() {
       setPanelPhase('opening')
       schedulePanelIdle()
     }, PANEL_TRANSITION_MS)
+  }
+
+  function resetToIntroState() {
+    setActivePanel(null)
+    setPanelPhase('idle')
+    setPanelResetToken((current) => current + 1)
+    setIntroSeed((current) => current + 1)
   }
 
   function resetComposer() {
@@ -273,6 +334,15 @@ export function HomePage() {
     resetComposer()
 
     if (command) {
+      if (command === 'clean') {
+        resetToIntroState()
+        return
+      }
+
+      if (command === 'projects') {
+        setPanelResetToken((current) => current + 1)
+      }
+
       openPanel(command)
       return
     }
@@ -333,7 +403,7 @@ export function HomePage() {
   return (
     <section className="flex min-h-0 flex-1 overflow-hidden">
       <div className="crt-shell flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden rounded-[2rem] border border-border/80 bg-[linear-gradient(180deg,rgba(18,28,14,0.94)_0%,rgba(10,22,12,0.96)_100%)] shadow-[0_30px_120px_rgba(0,0,0,0.42)]">
-        <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4 sm:px-5 sm:py-5" ref={scrollViewportRef}>
+        <div className="hide-scrollbar min-h-0 flex-1 overflow-y-auto px-4 py-4 sm:px-5 sm:py-5" ref={scrollViewportRef}>
           <div className="space-y-4">
             {messages.map((message) => (
               <div
@@ -359,7 +429,7 @@ export function HomePage() {
                   : 'max-h-[1600px] scale-y-100 opacity-100',
               ].join(' ')}
             >
-              {activePanel ? <HomePanelContent panel={activePanel} /> : null}
+              {activePanel ? <HomePanelContent panel={activePanel} resetToken={panelResetToken} /> : null}
             </div>
           </div>
         </div>
@@ -403,18 +473,18 @@ export function HomePage() {
               <textarea
                 ref={textareaRef}
                 className="min-h-24 flex-1 resize-none rounded-[1.2rem] border border-border/70 bg-background/50 px-4 py-3 text-sm text-foreground outline-none transition focus:border-accent focus:ring-1 focus:ring-accent"
-                disabled={isStreaming}
+                disabled={isAnyStreaming}
                 onChange={(event) => {
                   setInputValue(event.target.value)
                   setIsCommandMenuDismissed(false)
                 }}
                 onKeyDown={handleTextareaKeyDown}
-                placeholder={t.home.chat.inputPlaceholder}
+                placeholder={isAnyStreaming ? streamingComposerText : t.home.chat.inputPlaceholder}
                 rows={3}
                 value={inputValue}
               />
-              <Button className="h-11 px-6" disabled={isStreaming || !inputValue.trim()} type="submit">
-                {isStreaming ? t.home.chat.streaming : t.home.chat.send}
+              <Button className="h-11 px-6" disabled={isAnyStreaming || !inputValue.trim()} type="submit">
+                {isAnyStreaming ? t.home.chat.streaming : t.home.chat.send}
               </Button>
             </div>
           </div>

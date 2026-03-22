@@ -26,8 +26,13 @@ export const WINDOWS_DOWNLOAD_URL =
 
 export const PROJECT_ENTRIES: readonly ProjectEntry[] = [
   {
+    githubUrl: TENTSERV_CHAT_REPOSITORY_URL,
     id: 'tentserv-chat',
-    name: 'Tentserv Chat',
     supportsDownloads: true,
+  },
+  {
+    githubUrl: 'https://github.com/HiroLiang/plant-care',
+    id: 'plant-care',
+    supportsDownloads: false,
   },
 ] as const
