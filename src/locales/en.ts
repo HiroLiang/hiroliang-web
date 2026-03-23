@@ -83,23 +83,34 @@ export const enMessages: MessageDictionary = {
     overviewSectionTitle: 'Overview',
     projects: {
       plantCare: {
-        githubCta: 'Open plant-care on GitHub',
         sections: {
           architecture: {
-            body: 'The repository is organized around a clear data path: STM32 devices publish sensor data over CAN bus, Raspberry Pi services convert that into gRPC and HTTP APIs, and the React UI consumes those APIs for monitoring and control.',
+            body: 'The system is centered around a Raspberry Pi acting as the coordination node and external interface, while multiple MCUs operate as independent sensing or control units over CAN-Bus. FastAPI provides the service interface, and gRPC connects the backend with different daemons so the system can stay modular while preserving clear service boundaries.',
             title: 'Architecture',
           },
-          intro: {
-            body: 'Plant Care System is an IoT monorepo for plant monitoring and control built around Raspberry Pi and STM32 hardware, with separate services for device communication, monitoring APIs, command flows, and the web interface.',
-            title: 'Project Intro',
+          collaboration: {
+            body: 'The main point of this project is to explore how systems at different layers actually collaborate. Firmware, embedded devices, backend services, and control interfaces all come with different languages, communication paths, and deployment constraints. Rather than focusing on a single feature, the project is a way to understand how those layers can operate together inside one coherent architecture.',
+            title: 'Collaboration',
           },
-          repoValue: {
-            body: 'It is structured as a multi-service workspace with shared contracts, generated protobuf stubs, and clean-architecture-style Python services, making it a strong example of service boundaries and hardware-aware backend design.',
-            title: 'Repository Value',
+          intro: {
+            body: 'Plant Care is an IoT architecture experiment centered around plant care, designed to connect a Raspberry Pi with multiple MCUs and build a system that spans from control logic down to hardware interaction.',
+            title: 'Intro',
+          },
+          stack: {
+            body: 'Python, FastAPI, gRPC, STM32, Raspberry Pi, CAN-Bus',
+            title: 'Tech Stack',
+          },
+          status: {
+            body: 'The project is still in development, with the current focus on turning sensing, control, service interfaces, and device communication into a working IoT foundation rather than a one-off feature demo. From there, the next step is to keep refining modular boundaries, control flows, and the overall coordination model so the system can continue to grow cleanly.',
+            title: 'Status',
+          },
+          vision: {
+            body: 'What this project is trying to validate is not only the plant care scenario itself, but a more extensible IoT model: how responsibility should be divided between hardware control and service layers, what different protocols such as gRPC and CAN-Bus should do inside the system, and how embedded and application-level services can be integrated in a way that remains maintainable over time.',
+            title: 'Vision',
           },
         },
-        summary: 'An IoT monorepo for plant monitoring and control on Raspberry Pi + STM32 hardware.',
-        title: 'Plant Care System',
+        summary: 'An IoT architecture experiment built around plant care, focused on Raspberry Pi, MCUs, CAN-Bus, and clear service-layer collaboration.',
+        title: 'Plant Care',
       },
       tentservChat: {
         sections: {

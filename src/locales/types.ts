@@ -76,9 +76,12 @@ export type MessageDictionary = {
     overviewSectionTitle: string
     projects: {
       plantCare: {
-        githubCta: string
         sections: {
           architecture: {
+            body: string
+            title: string
+          }
+          collaboration: {
             body: string
             title: string
           }
@@ -86,7 +89,15 @@ export type MessageDictionary = {
             body: string
             title: string
           }
-          repoValue: {
+          stack: {
+            body: string
+            title: string
+          }
+          status: {
+            body: string
+            title: string
+          }
+          vision: {
             body: string
             title: string
           }

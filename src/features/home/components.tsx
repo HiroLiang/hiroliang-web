@@ -235,6 +235,14 @@ function TentservProjectDetail({ project, showRouteLink = false }: { project: Pr
 function PlantCareProjectDetail({ project }: { project: ProjectEntry }) {
   const t = useMessages()
   const content = t.project.projects.plantCare
+  const overviewSections = [
+    content.sections.intro,
+    content.sections.vision,
+    content.sections.collaboration,
+    content.sections.architecture,
+    content.sections.stack,
+    content.sections.status,
+  ]
 
   return (
     <SectionShell>
@@ -247,16 +255,15 @@ function PlantCareProjectDetail({ project }: { project: ProjectEntry }) {
       <p className="text-base leading-8 text-muted-foreground">{content.summary}</p>
 
       <div className="space-y-3">
-        <h3 className="text-lg font-semibold text-foreground">{content.sections.intro.title}</h3>
-        <p className="text-base leading-8 text-muted-foreground">{content.sections.intro.body}</p>
-      </div>
-      <div className="space-y-3">
-        <h3 className="text-lg font-semibold text-foreground">{content.sections.architecture.title}</h3>
-        <p className="text-base leading-8 text-muted-foreground">{content.sections.architecture.body}</p>
-      </div>
-      <div className="space-y-3">
-        <h3 className="text-lg font-semibold text-foreground">{content.sections.repoValue.title}</h3>
-        <p className="text-base leading-8 text-muted-foreground">{content.sections.repoValue.body}</p>
+        <h3 className="text-lg font-semibold text-foreground">{t.project.overviewSectionTitle}</h3>
+        <div className="space-y-5">
+          {overviewSections.map((section, index) => (
+            <div key={`${section.title}-${index}`} className="space-y-2">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">{section.title}</p>
+              <p className="whitespace-pre-wrap text-base leading-8 text-muted-foreground">{section.body}</p>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="space-y-3">
@@ -264,7 +271,7 @@ function PlantCareProjectDetail({ project }: { project: ProjectEntry }) {
         <div className="flex flex-wrap gap-3 pt-1">
           <Button asChild variant="outline">
             <a href={project.githubUrl} rel="noreferrer" target="_blank">
-              {content.githubCta}
+              {t.project.ctaGithub}
             </a>
           </Button>
         </div>

@@ -83,23 +83,34 @@ export const zhTWMessages: MessageDictionary = {
     overviewSectionTitle: '專案介紹',
     projects: {
       plantCare: {
-        githubCta: '前往 plant-care GitHub',
         sections: {
           architecture: {
-            body: '整個倉庫沿著清楚的資料流拆分：STM32 透過 CAN bus 發送感測資料，Raspberry Pi 上的服務再轉成 gRPC 與 HTTP API，最後由 React UI 負責監控與控制介面。',
-            title: '架構摘要',
+            body: '整體系統以 Raspberry Pi 作為核心節點，負責服務協調與對外接口；多個 MCU 則作為獨立功能單元，分別承擔感測與控制工作，並透過 CAN-Bus 溝通。後端以 FastAPI 提供服務接口，再透過 gRPC 串接不同 daemon，讓系統在維持模組化的同時，仍然保有清楚的責任切分與服務邊界。',
+            title: 'Architecture',
+          },
+          collaboration: {
+            body: '這個專案主要在探索不同層級系統之間要如何協作。從 firmware、嵌入式裝置到後端服務與控制介面，每一層都有不同的語言、通訊方式與部署條件。比起只完成單一功能，我更在意的是這些層級如何在同一個架構裡穩定互動，並形成可以持續擴展的系統模型。',
+            title: 'Collaboration',
           },
           intro: {
-            body: 'Plant Care System 是一個以 Raspberry Pi 與 STM32 硬體為核心的植物監控與控制 IoT monorepo，將裝置通訊、監控 API、控制流程與 web UI 拆成不同服務來協作。',
-            title: '專案介紹',
+            body: 'Plant Care 是一個以植栽照護為出發點的 IoT 架構實驗，目標是串接 Raspberry Pi 與多個 MCU，建立一套從控制層到硬體層都能協同運作的整合系統。',
+            title: 'Intro',
           },
-          repoValue: {
-            body: '它同時整理了 shared contracts、protobuf stubs 與 clean architecture 風格的 Python service 結構，是一個很完整的硬體整合與服務切分設計範例。',
-            title: '倉庫價值',
+          stack: {
+            body: 'Python、FastAPI、gRPC、STM32、Raspberry Pi、CAN-Bus',
+            title: '技術棧',
+          },
+          status: {
+            body: '目前專案仍在開發中，重點放在把感測、控制、服務接口與裝置通訊整合成一個真正可運作的 IoT 基礎架構，而不是停留在單點功能驗證。後續也會持續往更清楚的模組邊界、可擴展的控制流程與更完整的系統協調能力推進。',
+            title: 'Status',
+          },
+          vision: {
+            body: '這個專案想驗證的，不只是植物照護這個場景本身，而是一個可延展的 IoT 模型：從硬體控制到服務層如何切分責任，不同通訊協定在系統中扮演什麼角色，以及 embedded 與應用層之間要怎麼建立長期可維護的整合方式。',
+            title: 'Vision',
           },
         },
-        summary: '一個建立在 Raspberry Pi + STM32 硬體上的植物監控與控制 IoT monorepo。',
-        title: 'Plant Care System',
+        summary: '一個以植栽照護為起點，聚焦 Raspberry Pi、MCU、CAN-Bus 與服務分層協作的 IoT 架構實驗。',
+        title: 'Plant Care',
       },
       tentservChat: {
         sections: {
