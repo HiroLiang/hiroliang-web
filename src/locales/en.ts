@@ -76,7 +76,7 @@ export const enMessages: MessageDictionary = {
   project: {
     backHome: 'Back to home',
     backToProjects: 'Back to projects',
-    ctaGithub: 'View source and updates on GitHub',
+    ctaGithub: 'GitHub',
     detectedEnvironment: 'Detected environment',
     downloadsSectionTitle: 'Downloads',
     linkSectionTitle: 'Links',
@@ -104,11 +104,33 @@ export const enMessages: MessageDictionary = {
       tentservChat: {
         sections: {
           overview: {
-            body1: 'Tentserv Chat is a desktop-focused chat application designed to keep the installation flow simple while still adapting to the device you are using.',
-            body2: 'The project balances a practical release workflow with a clean delivery experience, so the same page can guide Mac, Windows, and unsupported mobile visitors with the right next step.',
+            architecture: {
+              body: 'Architecturally, the point is not simply to make chat work, but to make security boundaries, model participation, and long-term evolvability coexist in the same system. The design uses X3DH as the basis for secure session establishment, keeps key lifecycle management on the client side, and separates message security from model integration so the system can grow toward multi-device support, prekey management, and more capable AI-assisted workflows.',
+              title: 'Architecture',
+            },
+            boundary: {
+              body: 'The core concern is treating data boundaries as a product decision from the beginning. Messages may pass through a server, but should not be readable by it. AI should be able to assist inside conversations, but only with explicitly permitted context. Local, cloud, and hybrid model workflows should all exist under the same security assumptions rather than relying on platform trust as a substitute for privacy.',
+              title: 'Boundary',
+            },
+            intro: {
+              body: 'Tentserv Chat is a desktop chat application designed around privacy, controllability, and long-term extensibility, with the goal of rethinking the trust boundary between users and systems as AI becomes more deeply embedded in personal devices and everyday communication.',
+              title: 'Intro',
+            },
+            stack: {
+              body: 'GCP (VM, IAM, IAP Tunnel), Cloudflare (Tunnel, Zero Trust), Go, Rust, React',
+              title: 'Skill Stack',
+            },
+            status: {
+              body: 'The project is still in active development and testing, and the current download flow is only part of an early product prototype. The immediate focus is on the core chat flow, E2EE foundations, model integration boundaries, and desktop interaction. Over time, the intent is to extend this into a broader local-first application foundation for personal AI capabilities.',
+              title: 'Status',
+            },
+            vision: {
+              body: 'Tentserv Chat started from a question that keeps returning: as AI moves deeper into communication, workflows, and personal devices, how do we preserve usability without giving up user sovereignty? The project is not trying to be just another messenger, but to explore a more forward-looking application foundation where chat, AI, encryption, and local control can coexist without collapsing into a cloud-first trust model.',
+              title: 'Vision',
+            },
           },
         },
-        summary: 'A desktop-focused chat application with environment-aware downloads for macOS and Windows.',
+        summary: 'A desktop chat application aimed at privacy, controllability, and E2EE, with room for both local and cloud AI models.',
         title: 'Tentserv Chat',
       },
     },

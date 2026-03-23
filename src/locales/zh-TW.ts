@@ -76,7 +76,7 @@ export const zhTWMessages: MessageDictionary = {
   project: {
     backHome: '回到首頁',
     backToProjects: '返回作品選單',
-    ctaGithub: '到 GitHub 查看原始碼與更新',
+    ctaGithub: 'GitHub',
     detectedEnvironment: '目前偵測裝置',
     downloadsSectionTitle: '下載說明',
     linkSectionTitle: '相關連結',
@@ -104,11 +104,33 @@ export const zhTWMessages: MessageDictionary = {
       tentservChat: {
         sections: {
           overview: {
-            body1: 'Tentserv Chat 是一個以桌面使用情境為主的聊天應用，目標是在保持安裝流程簡潔的同時，依照使用裝置提供合適的下一步。',
-            body2: '它把實際可交付的桌面版本體驗與清楚的釋出流程整理在同一頁，讓 Mac、Windows 與不支援的行動裝置都能得到對應的說明。',
+            architecture: {
+              body: '在架構上，這個專案關心的不是單純把聊天做出來，而是讓安全邊界、模型接入與可演進性一起成立。它以 X3DH 作為端對端加密握手的基礎，並把金鑰生命週期留在客戶端，同時刻意分離訊息安全層與模型接入層，讓系統未來可以往多裝置、預密鑰管理與更完整的 AI 協作能力延伸。',
+              title: 'Architecture',
+            },
+            boundary: {
+              body: '這個專案最在意的，是把資料邊界從一開始就納入產品設計。訊息可以經過伺服器轉發，但內容不應該被伺服器解讀；AI 可以參與對話與協作，但只應該接觸被授權的上下文；而本地模型、雲端模型與混合式路徑，都必須建立在相同的安全前提之上，而不是依賴平台承諾來維持隱私。',
+              title: 'Boundary',
+            },
+            intro: {
+              body: 'Tentserv Chat 是一個以隱私、可控性與可延展性為核心設計的桌面聊天應用，目標是在 AI 逐步深入個人裝置與日常溝通之後，重新思考使用者與系統之間的信任邊界。',
+              title: 'Intro',
+            },
+            stack: {
+              body: 'GCP（VM、IAM、IAP Tunnel）、Cloudflare（Tunnel、Zero Trust）、Go、Rust、React',
+              title: 'Skill Stack',
+            },
+            status: {
+              body: '目前專案仍在開發與測試階段，下載也只是產品雛形的一部分。現階段優先推進的是聊天主流程、E2EE 基礎機制、模型接入邊界與桌面交互；更長遠的方向，則是把這套基礎延伸成一個能承載更多個人 AI 助理能力的本地應用平台。',
+              title: 'Status',
+            },
+            vision: {
+              body: 'Tentserv Chat 來自一個持續存在的問題意識：當 AI 更深地進入溝通、工作流與個人裝置之後，使用者要怎麼在便利性與資料主權之間取得平衡。它想驗證的不是另一個聊天介面，而是一種更前瞻的應用基底，讓聊天、AI、加密與本地控制能力可以在同一個系統中共存。',
+              title: 'Vision',
+            },
           },
         },
-        summary: '一個會依照裝置環境提供 macOS 與 Windows 下載引導的桌面聊天應用。',
+        summary: '一個以隱私、可控性與 E2EE 為方向，支援本地與雲端模型共存的桌面聊天應用。',
         title: 'Tentserv Chat',
       },
     },

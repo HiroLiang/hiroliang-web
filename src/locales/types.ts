@@ -97,8 +97,30 @@ export type MessageDictionary = {
       tentservChat: {
         sections: {
           overview: {
-            body1: string
-            body2: string
+            architecture: {
+              body: string
+              title: string
+            }
+            boundary: {
+              body: string
+              title: string
+            }
+            intro: {
+              body: string
+              title: string
+            }
+            stack: {
+              body: string
+              title: string
+            }
+            status: {
+              body: string
+              title: string
+            }
+            vision: {
+              body: string
+              title: string
+            }
           }
         }
         summary: string

@@ -177,6 +177,14 @@ function ProjectDownloadContent() {
 function TentservProjectDetail({ project, showRouteLink = false }: { project: ProjectEntry; showRouteLink?: boolean }) {
   const t = useMessages()
   const content = t.project.projects.tentservChat
+  const overviewSections = [
+    content.sections.overview.intro,
+    content.sections.overview.vision,
+    content.sections.overview.boundary,
+    content.sections.overview.architecture,
+    content.sections.overview.stack,
+    content.sections.overview.status,
+  ]
 
   return (
     <SectionShell>
@@ -190,8 +198,14 @@ function TentservProjectDetail({ project, showRouteLink = false }: { project: Pr
 
       <div className="space-y-3">
         <h3 className="text-lg font-semibold text-foreground">{t.project.overviewSectionTitle}</h3>
-        <p className="text-base leading-8 text-muted-foreground">{content.sections.overview.body1}</p>
-        <p className="text-base leading-8 text-muted-foreground">{content.sections.overview.body2}</p>
+        <div className="space-y-5">
+          {overviewSections.map((section, index) => (
+            <div key={`${section.title}-${index}`} className="space-y-2">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">{section.title}</p>
+              <p className="whitespace-pre-wrap text-base leading-8 text-muted-foreground">{section.body}</p>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="space-y-3">
