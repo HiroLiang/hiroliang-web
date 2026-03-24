@@ -58,7 +58,7 @@ export const zhTWMessages: MessageDictionary = {
       },
       github: {
         body: 'GitHub 會放我持續整理的實驗作品、桌面工具與這個作品站相關開發方向。',
-        cta: '前往 GitHub 個人頁',
+        cta: 'GitHub',
         eyebrow: '外部連結',
         title: 'GitHub',
       },

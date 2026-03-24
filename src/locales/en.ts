@@ -58,7 +58,7 @@ export const enMessages: MessageDictionary = {
       },
       github: {
         body: 'GitHub is where I publish experiments, desktop tooling, and the work that supports this portfolio direction.',
-        cta: 'Open GitHub profile',
+        cta: 'GitHub',
         eyebrow: 'External',
         title: 'GitHub',
       },

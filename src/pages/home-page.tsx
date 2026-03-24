@@ -75,6 +75,7 @@ export function HomePage() {
   const sessionIdRef = useRef(crypto.randomUUID())
   const isComposingRef = useRef(false)
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
+  const panelTransitionTargetRef = useRef<HomePanelType | null>(null)
 
   const filteredCommands = useMemo(() => {
     if (!inputValue.startsWith('/')) {
@@ -231,6 +232,8 @@ export function HomePage() {
       timeoutRef.current = null
     }
 
+    panelTransitionTargetRef.current = panel
+
     if (!activePanel) {
       setActivePanel(panel)
       setPanelPhase('opening')
@@ -244,13 +247,46 @@ export function HomePage() {
 
     setPanelPhase('closing')
     timeoutRef.current = window.setTimeout(() => {
-      setActivePanel(panel)
+      const nextPanel = panelTransitionTargetRef.current
+
+      if (!nextPanel) {
+        setActivePanel(null)
+        setPanelPhase('idle')
+        timeoutRef.current = null
+        return
+      }
+
+      setActivePanel(nextPanel)
       setPanelPhase('opening')
       schedulePanelIdle()
     }, PANEL_TRANSITION_MS)
   }
 
+  async function closeActivePanel() {
+    if (!activePanel) {
+      return
+    }
+
+    if (timeoutRef.current) {
+      window.clearTimeout(timeoutRef.current)
+      timeoutRef.current = null
+    }
+
+    panelTransitionTargetRef.current = null
+    setPanelPhase('closing')
+
+    await new Promise<void>((resolve) => {
+      timeoutRef.current = window.setTimeout(() => {
+        setActivePanel(null)
+        setPanelPhase('idle')
+        timeoutRef.current = null
+        resolve()
+      }, PANEL_TRANSITION_MS)
+    })
+  }
+
   function resetToIntroState() {
+    panelTransitionTargetRef.current = null
     setActivePanel(null)
     setPanelPhase('idle')
     setPanelResetToken((current) => current + 1)
@@ -362,6 +398,7 @@ export function HomePage() {
       return
     }
 
+    await closeActivePanel()
     await sendMessage(nextValue)
   }
 
@@ -444,7 +481,7 @@ export function HomePage() {
                 activePanel ? 'pointer-events-auto' : 'pointer-events-none',
                 panelPhase === 'closing' || !activePanel
                   ? 'max-h-0 scale-y-0 opacity-0'
-                  : 'max-h-[1600px] scale-y-100 opacity-100',
+                  : 'max-h-[9999px] scale-y-100 opacity-100',
               ].join(' ')}
             >
               {activePanel ? <HomePanelContent panel={activePanel} resetToken={panelResetToken} /> : null}

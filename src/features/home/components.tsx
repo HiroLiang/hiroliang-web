@@ -296,11 +296,13 @@ export function ProjectsPanel({
   resetToken = 0,
   showRouteLink = false,
   startWithSelector = true,
+  className = '',
 }: {
   initialProjectId?: ProjectEntry['id']
   resetToken?: number
   showRouteLink?: boolean
   startWithSelector?: boolean
+  className?: string
 }) {
   const t = useMessages()
   const [selectedProjectId, setSelectedProjectId] = useState(initialProjectId ?? PROJECT_ENTRIES[0]?.id ?? '')
@@ -315,7 +317,7 @@ export function ProjectsPanel({
   }, [resetToken, startWithSelector])
 
   return (
-    <div className="space-y-4">
+    <div className={['min-h-0 space-y-4', className].join(' ').trim()}>
       {isSelectorOpen ? (
         <SectionShell>
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">{t.project.selectorLabel}</p>
@@ -344,7 +346,7 @@ export function ProjectsPanel({
       ) : null}
 
       {!isSelectorOpen && selectedProject ? (
-        <div className="space-y-4">
+        <div className="min-h-0 space-y-4">
           <div className="flex">
             <Button onClick={() => setIsSelectorOpen(true)} type="button" variant="ghost">
               {t.project.backToProjects}
