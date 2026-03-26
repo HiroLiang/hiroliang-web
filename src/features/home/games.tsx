@@ -1,11 +1,12 @@
 import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
+import { GomokuGame } from '@/features/home/games/gomoku-game'
 import { SnakeGame } from '@/features/home/games/snake-game'
 import { useMessages } from '@/hooks/use-locale'
 import type { GameEntry } from '@/features/home/types'
 
-const GAME_ENTRIES: readonly GameEntry[] = [{ id: 'snake' }] as const
+const GAME_ENTRIES: readonly GameEntry[] = [{ id: 'gomoku' }, { id: 'snake' }] as const
 
 export function GamesPanel() {
   const t = useMessages()
@@ -51,6 +52,20 @@ export function GamesPanel() {
 
           <section className="flex h-[min(72vh,48rem)] min-h-[22rem] flex-col overflow-hidden rounded-[1.6rem] border border-border/80 bg-secondary/45 p-3 shadow-[0_16px_60px_rgba(0,0,0,0.2)] sm:p-4">
             <SnakeGame />
+          </section>
+        </div>
+      ) : null}
+
+      {selectedGameId === 'gomoku' ? (
+        <div className="min-h-0 space-y-4">
+          <div className="flex">
+            <Button onClick={() => setSelectedGameId(null)} type="button" variant="ghost">
+              {t.home.panels.games.backToGames}
+            </Button>
+          </div>
+
+          <section className="flex h-[min(78vh,52rem)] min-h-[24rem] flex-col overflow-hidden rounded-[1.6rem] border border-border/80 bg-secondary/45 p-1 shadow-[0_16px_60px_rgba(0,0,0,0.2)] sm:p-4">
+            <GomokuGame />
           </section>
         </div>
       ) : null}

@@ -59,10 +59,26 @@ export type MessageDictionary = {
         backToGames: string
         description: string
         entries: {
+          gomoku: {
+            description: string
+            title: string
+          }
           snake: {
             description: string
             title: string
           }
+        }
+        gomoku: {
+          boardLabel: string
+          comingSoon: string
+          currentTurnLabel: string
+          draw: string
+          modeLabels: Record<'local' | 'cpu' | 'online', string>
+          reset: string
+          restartHint: string
+          stoneLabels: Record<'black' | 'white', string>
+          statusIdle: string
+          winnerLabel: string
         }
         eyebrow: string
         snake: {

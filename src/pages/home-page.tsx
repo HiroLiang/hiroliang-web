@@ -458,7 +458,11 @@ export function HomePage() {
   return (
     <section className="flex min-h-0 flex-1 overflow-hidden">
       <div className="crt-shell flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden rounded-[2rem] border border-border/80 bg-[linear-gradient(180deg,rgba(18,28,14,0.94)_0%,rgba(10,22,12,0.96)_100%)] shadow-[0_30px_120px_rgba(0,0,0,0.42)]">
-        <div className="hide-scrollbar min-h-0 flex-1 overflow-y-auto px-4 py-4 sm:px-5 sm:py-5" ref={scrollViewportRef}>
+        <div
+          className="hide-scrollbar min-h-0 flex-1 overflow-y-auto px-4 py-4 sm:px-5 sm:py-5"
+          data-app-scroll-root="true"
+          ref={scrollViewportRef}
+        >
           <div className="space-y-4">
             {messages.map((message) => (
               <div

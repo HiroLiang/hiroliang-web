@@ -64,12 +64,35 @@ export const zhTWMessages: MessageDictionary = {
       },
       games: {
         backToGames: '返回遊戲選單',
-        description: '放一些可以直接在網頁上玩的輕量小遊戲，先從簡單的像素版貪吃蛇開始。',
+        description: '放一些可以在線上玩的輕量小遊戲。',
         entries: {
+          gomoku: {
+            description: '使用 canvas 繪製的五子棋，先支援同機雙人，並預留後續電腦對戰與線上對戰接口。',
+            title: '五子棋',
+          },
           snake: {
             description: '經典貪吃蛇，小棋盤像素風格，每吃一顆豆子就再快一點，撞牆或撞到自己就結束。',
             title: '貪吃蛇',
           },
+        },
+        gomoku: {
+          boardLabel: '五子棋遊戲棋盤',
+          comingSoon: '即將推出',
+          currentTurnLabel: '現手',
+          draw: '平手',
+          modeLabels: {
+            cpu: '電腦對戰',
+            local: '個人遊戲',
+            online: '線上對戰',
+          },
+          reset: '重新開始',
+          restartHint: '按下重新開始即可開新局。',
+          stoneLabels: {
+            black: '黑',
+            white: '白',
+          },
+          statusIdle: '黑子先手。',
+          winnerLabel: '贏了',
         },
         eyebrow: 'Mini Games',
         snake: {

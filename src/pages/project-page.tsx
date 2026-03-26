@@ -7,7 +7,7 @@ export function ProjectPage() {
   const t = useMessages()
 
   return (
-    <div className="hide-scrollbar flex min-h-0 flex-1 flex-col overflow-y-auto">
+    <div className="hide-scrollbar flex min-h-0 flex-1 flex-col overflow-y-auto" data-app-scroll-root="true">
       <div className="space-y-8 pb-6">
         <ProjectsPanel
           className="min-h-0"

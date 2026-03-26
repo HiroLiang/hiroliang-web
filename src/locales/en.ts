@@ -64,12 +64,36 @@ export const enMessages: MessageDictionary = {
       },
       games: {
         backToGames: 'Back to games',
-        description: 'A small arcade corner for playful browser experiments. Starting with a simple pixel Snake.',
+        description: 'A collection of lightweight games that can be played online.',
         entries: {
+          gomoku: {
+            description:
+              'Canvas Gomoku with local two-player play today, plus reserved hooks for future CPU and online battles.',
+            title: 'Gomoku',
+          },
           snake: {
             description: 'Classic Snake with a compact pixel board, faster speed on each snack, and game-over on wall or self collision.',
             title: 'Snake',
           },
+        },
+        gomoku: {
+          boardLabel: 'Gomoku game board',
+          comingSoon: 'Coming soon',
+          currentTurnLabel: 'Current turn',
+          draw: 'Draw game',
+          modeLabels: {
+            cpu: 'CPU Battle',
+            local: 'Local Game',
+            online: 'Online Battle',
+          },
+          reset: 'Restart',
+          restartHint: 'Press restart to begin a new round.',
+          stoneLabels: {
+            black: 'Black',
+            white: 'White',
+          },
+          statusIdle: 'Black moves first.',
+          winnerLabel: 'wins',
         },
         eyebrow: 'Mini games',
         snake: {

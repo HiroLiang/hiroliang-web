@@ -29,7 +29,35 @@ export type ProjectEntry = {
 }
 
 export type GameEntry = {
-  id: 'snake'
+  id: 'snake' | 'gomoku'
+}
+
+export type GomokuMode = 'local' | 'cpu' | 'online'
+
+export type GomokuStone = 'black' | 'white'
+
+export type GomokuCell = {
+  x: number
+  y: number
+}
+
+export type GomokuBoardState = (GomokuStone | null)[][]
+
+export type GomokuGameStatus = 'idle' | 'playing' | 'won' | 'draw'
+
+export type GomokuGameState = {
+  board: GomokuBoardState
+  currentTurn: GomokuStone
+  lastMove: GomokuCell | null
+  status: GomokuGameStatus
+  winner: GomokuStone | null
+}
+
+export type GomokuBoardController = {
+  board: GomokuBoardState
+  currentTurn: GomokuStone
+  getAvailableMoves: () => GomokuCell[]
+  placeStone: (cell: GomokuCell) => boolean
 }
 
 export type SnakeDirection = 'up' | 'down' | 'left' | 'right'
