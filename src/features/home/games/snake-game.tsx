@@ -1,7 +1,8 @@
-import { type KeyboardEvent, useEffect, useRef, useState } from 'react'
+import { type KeyboardEvent, type PointerEvent, useEffect, useRef, useState } from 'react'
 
 import { useMessages } from '@/hooks/use-locale'
 import type { SnakeCell, SnakeDirection, SnakeGameState } from '@/features/home/types'
+import { useDetectedPlatform } from '@/features/project/use-detected-platform'
 
 const INITIAL_SPEED_MS = 220
 const MIN_SPEED_MS = 90
@@ -9,6 +10,19 @@ const SPEED_STEP_MS = 12
 const HUD_HEIGHT = 44
 const VIEW_PADDING = 16
 const MAX_SIMULATION_STEPS = 6
+const MAX_QUEUED_DIRECTIONS = 2
+const MIN_SWIPE_DISTANCE_PX = 20
+const MOBILE_MIN_CELL_SIZE_PX = 8
+const MOBILE_MAX_CELL_SIZE_PX = 15
+const DESKTOP_MIN_CELL_SIZE_PX = 5
+const DESKTOP_MAX_CELL_SIZE_PX = 10
+const MOBILE_MIN_GRID_COUNT = 12
+const BOARD_FRAME_INSET_PX = 8
+const MOBILE_HUD_HEIGHT_PX = 18
+const MOBILE_HUD_GAP_PX = 8
+const MOBILE_TOP_PADDING_PX = 8
+const MOBILE_BOTTOM_PADDING_PX = 8
+const MOBILE_SIDE_PADDING_PX = 8
 const DIRECTION_VECTORS: Record<SnakeDirection, SnakeCell> = {
   down: { x: 0, y: 1 },
   left: { x: -1, y: 0 },
@@ -27,8 +41,16 @@ type CanvasLayout = {
   boardSize: number
   boardTop: number
   cellSize: number
+  frameInset: number
   gridCount: number
   height: number
+  hudBaseline: number
+  hudGap: number
+  hudHeight: number
+  hudLeft: number
+  hudRight: number
+  playableHeight: number
+  playableWidth: number
   width: number
 }
 
@@ -36,6 +58,11 @@ type SnakeRuntime = {
   accumulatorMs: number
   game: SnakeGameState
   lastFrameMs: number | null
+}
+
+type PointerStart = {
+  x: number
+  y: number
 }
 
 function getResponsiveGridCount(boardPixelSize: number) {
@@ -99,22 +126,115 @@ function isOppositeDirection(next: SnakeDirection, current: SnakeDirection) {
   return OPPOSITE_DIRECTIONS[next] === current
 }
 
-function computeLayout(width: number, height: number): CanvasLayout {
+function enqueueDirection(
+  queue: readonly SnakeDirection[],
+  currentDirection: SnakeDirection,
+  nextDirection: SnakeDirection,
+): SnakeDirection[] {
+  if (queue.length >= MAX_QUEUED_DIRECTIONS) {
+    return [...queue]
+  }
+
+  const lastQueuedDirection = queue.at(-1)
+  const baselineDirection = lastQueuedDirection ?? currentDirection
+
+  if (isOppositeDirection(nextDirection, baselineDirection) || lastQueuedDirection === nextDirection) {
+    return [...queue]
+  }
+
+  return [...queue, nextDirection]
+}
+
+function resolveSwipeDirection(deltaX: number, deltaY: number) {
+  if (Math.abs(deltaX) < MIN_SWIPE_DISTANCE_PX && Math.abs(deltaY) < MIN_SWIPE_DISTANCE_PX) {
+    return null
+  }
+
+  if (Math.abs(deltaX) > Math.abs(deltaY)) {
+    return deltaX > 0 ? 'right' : 'left'
+  }
+
+  return deltaY > 0 ? 'down' : 'up'
+}
+
+function clamp(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max)
+}
+
+function computeLayout(width: number, height: number, isMobile: boolean): CanvasLayout {
   const safeWidth = Math.max(width, 160)
   const safeHeight = Math.max(height, 160)
+  if (isMobile) {
+    const playableWidth = Math.max(
+      1,
+      safeWidth - (MOBILE_SIDE_PADDING_PX + BOARD_FRAME_INSET_PX) * 2,
+    )
+    const playableHeight = Math.max(
+      1,
+      safeHeight -
+        MOBILE_TOP_PADDING_PX -
+        MOBILE_HUD_HEIGHT_PX -
+        MOBILE_HUD_GAP_PX -
+        MOBILE_BOTTOM_PADDING_PX -
+        BOARD_FRAME_INSET_PX * 2,
+    )
+    const boardLimit = Math.max(1, Math.floor(Math.min(playableWidth, playableHeight)))
+    const preferredCellSize = clamp(
+      Math.floor(boardLimit / MOBILE_MIN_GRID_COUNT),
+      MOBILE_MIN_CELL_SIZE_PX,
+      MOBILE_MAX_CELL_SIZE_PX,
+    )
+    const gridCount = Math.max(1, Math.floor(boardLimit / preferredCellSize))
+    const cellSize = clamp(Math.floor(boardLimit / gridCount), MOBILE_MIN_CELL_SIZE_PX, MOBILE_MAX_CELL_SIZE_PX)
+    const adjustedBoardSize = gridCount * cellSize
+    const boardLeft = Math.floor((safeWidth - adjustedBoardSize) / 2)
+    const boardTop = MOBILE_TOP_PADDING_PX + MOBILE_HUD_HEIGHT_PX + MOBILE_HUD_GAP_PX + BOARD_FRAME_INSET_PX
+
+    return {
+      boardLeft,
+      boardSize: adjustedBoardSize,
+      boardTop,
+      cellSize,
+      frameInset: BOARD_FRAME_INSET_PX,
+      gridCount,
+      height: safeHeight,
+      hudBaseline: MOBILE_TOP_PADDING_PX + Math.floor(MOBILE_HUD_HEIGHT_PX / 2),
+      hudGap: MOBILE_HUD_GAP_PX,
+      hudHeight: MOBILE_HUD_HEIGHT_PX,
+      hudLeft: boardLeft,
+      hudRight: boardLeft + adjustedBoardSize,
+      playableHeight,
+      playableWidth,
+      width: safeWidth,
+    }
+  }
+
+  const availableWidth = Math.max(safeWidth - VIEW_PADDING * 2, 64)
   const playableHeight = Math.max(safeHeight - HUD_HEIGHT - VIEW_PADDING * 2, 64)
-  const maxBoardSize = Math.max(64, Math.floor(Math.min(safeWidth - VIEW_PADDING * 2, playableHeight)))
-  const gridCount = getResponsiveGridCount(maxBoardSize)
-  const cellSize = Math.max(2, Math.floor(maxBoardSize / gridCount))
-  const adjustedBoardSize = cellSize * gridCount
+  const maxBoardSize = Math.max(64, Math.floor(Math.min(availableWidth, playableHeight)))
+  const targetGridCount = getResponsiveGridCount(maxBoardSize)
+  const minimumGridCount = Math.max(8, Math.floor(maxBoardSize / DESKTOP_MAX_CELL_SIZE_PX))
+  const maximumGridCount = Math.max(minimumGridCount, Math.floor(maxBoardSize / DESKTOP_MIN_CELL_SIZE_PX))
+  const gridCount = clamp(targetGridCount, minimumGridCount, maximumGridCount)
+  const cellSize = clamp(Math.floor(maxBoardSize / gridCount), DESKTOP_MIN_CELL_SIZE_PX, DESKTOP_MAX_CELL_SIZE_PX)
+  const adjustedBoardSize = gridCount * cellSize
+  const boardTop = HUD_HEIGHT + Math.max(VIEW_PADDING, Math.floor((playableHeight - adjustedBoardSize) / 2) + VIEW_PADDING)
 
   return {
     boardLeft: Math.floor((safeWidth - adjustedBoardSize) / 2),
     boardSize: adjustedBoardSize,
-    boardTop: HUD_HEIGHT + Math.max(VIEW_PADDING, Math.floor((playableHeight - adjustedBoardSize) / 2) + VIEW_PADDING),
+    boardTop,
     cellSize,
+    frameInset: BOARD_FRAME_INSET_PX,
     gridCount,
     height: safeHeight,
+    hudBaseline: 22,
+    hudGap: VIEW_PADDING,
+    hudHeight: HUD_HEIGHT,
+    hudLeft: VIEW_PADDING,
+    hudRight: Math.max(VIEW_PADDING, safeWidth - 140),
+    playableHeight: playableHeight,
+    playableWidth: availableWidth,
     width: safeWidth,
   }
 }
@@ -148,7 +268,8 @@ function drawSnakeGame(
     score: string
   },
 ) {
-  const { boardLeft, boardSize, boardTop, cellSize, gridCount, height, width } = layout
+  const { boardLeft, boardSize, boardTop, cellSize, frameInset, gridCount, height, hudBaseline, hudLeft, hudRight, width } =
+    layout
 
   context.clearRect(0, 0, width, height)
 
@@ -160,11 +281,25 @@ function drawSnakeGame(
 
   context.strokeStyle = 'rgba(132, 148, 95, 0.32)'
   context.lineWidth = 1
-  drawRoundedRect(context, boardLeft - 8, boardTop - 8, boardSize + 16, boardSize + 16, 18)
+  drawRoundedRect(
+    context,
+    boardLeft - frameInset,
+    boardTop - frameInset,
+    boardSize + frameInset * 2,
+    boardSize + frameInset * 2,
+    18,
+  )
   context.stroke()
 
   context.fillStyle = 'rgba(17, 29, 15, 0.94)'
-  drawRoundedRect(context, boardLeft - 8, boardTop - 8, boardSize + 16, boardSize + 16, 18)
+  drawRoundedRect(
+    context,
+    boardLeft - frameInset,
+    boardTop - frameInset,
+    boardSize + frameInset * 2,
+    boardSize + frameInset * 2,
+    18,
+  )
   context.fill()
 
   context.fillStyle = 'rgba(78, 93, 58, 0.2)'
@@ -195,8 +330,11 @@ function drawSnakeGame(
   context.fillStyle = '#cfd9a3'
   context.font = '600 14px var(--font-family-app), monospace'
   context.textBaseline = 'middle'
-  context.fillText(`${labels.score} ${game.score}`, VIEW_PADDING, 22)
-  context.fillText(`${labels.highScore} ${highScore}`, Math.max(VIEW_PADDING, width - 140), 22)
+  context.textAlign = 'start'
+  context.fillText(`${labels.score} ${game.score}`, hudLeft, hudBaseline)
+  context.textAlign = 'end'
+  context.fillText(`${labels.highScore} ${highScore}`, hudRight, hudBaseline)
+  context.textAlign = 'start'
 
   if (game.status !== 'game-over') {
     return
@@ -219,22 +357,24 @@ function drawSnakeGame(
 
 export function SnakeGame() {
   const t = useMessages()
-  const [layout, setLayout] = useState<CanvasLayout>(() => computeLayout(640, 640))
+  const platform = useDetectedPlatform()
+  const isMobile = platform === 'mobile'
+  const [layout, setLayout] = useState<CanvasLayout>(() => computeLayout(640, 640, false))
   const [game, setGame] = useState<SnakeGameState>(() => createInitialSnakeState(layout.gridCount))
   const [highScore, setHighScore] = useState(0)
   const wrapperRef = useRef<HTMLDivElement | null>(null)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const pointerStartRef = useRef<PointerStart | null>(null)
   const runtimeRef = useRef<SnakeRuntime>({
     accumulatorMs: 0,
     game,
     lastFrameMs: null,
   })
   const highScoreRef = useRef(highScore)
-  const queuedDirectionRef = useRef<SnakeDirection>(game.direction)
+  const queuedDirectionRef = useRef<SnakeDirection[]>([])
 
   useEffect(() => {
     runtimeRef.current.game = game
-    queuedDirectionRef.current = game.direction
   }, [game])
 
   useEffect(() => {
@@ -254,14 +394,14 @@ export function SnakeGame() {
       }
 
       setLayout((current) => {
-        const nextLayout = computeLayout(entry.contentRect.width, entry.contentRect.height)
+        const nextLayout = computeLayout(entry.contentRect.width, entry.contentRect.height, isMobile)
 
         if (current.gridCount !== nextLayout.gridCount) {
           const resetGame = createInitialSnakeState(nextLayout.gridCount)
           runtimeRef.current.game = resetGame
           runtimeRef.current.accumulatorMs = 0
           runtimeRef.current.lastFrameMs = null
-          queuedDirectionRef.current = resetGame.direction
+          queuedDirectionRef.current = []
           setGame(resetGame)
         }
 
@@ -274,7 +414,7 @@ export function SnakeGame() {
     return () => {
       observer.disconnect()
     }
-  }, [])
+  }, [isMobile])
 
   useEffect(() => {
     setHighScore((current) => Math.max(current, game.score))
@@ -294,7 +434,10 @@ export function SnakeGame() {
         return current
       }
 
-      const nextDirection = queuedDirectionRef.current
+      const nextDirection = queuedDirectionRef.current[0] ?? current.direction
+      if (queuedDirectionRef.current.length > 0) {
+        queuedDirectionRef.current = queuedDirectionRef.current.slice(1)
+      }
       const vector = DIRECTION_VECTORS[nextDirection]
       const head = current.snake[0]
       const nextHead = {
@@ -395,7 +538,6 @@ export function SnakeGame() {
 
       if (nextGame !== runtime.game) {
         runtime.game = nextGame
-        queuedDirectionRef.current = nextGame.direction
         if (nextGame.score > highScoreRef.current) {
           highScoreRef.current = nextGame.score
           setHighScore(nextGame.score)
@@ -432,7 +574,7 @@ export function SnakeGame() {
       direction,
       status: 'running',
     }
-    queuedDirectionRef.current = direction
+    queuedDirectionRef.current = []
     runtimeRef.current.game = nextGame
     runtimeRef.current.accumulatorMs = 0
     runtimeRef.current.lastFrameMs = null
@@ -441,17 +583,13 @@ export function SnakeGame() {
 
   function queueDirection(nextDirection: SnakeDirection) {
     const current = runtimeRef.current.game
-    const currentDirection = current.direction
-    const queuedDirection = queuedDirectionRef.current
 
-    if (
-      current.status === 'running' &&
-      (isOppositeDirection(nextDirection, currentDirection) || isOppositeDirection(nextDirection, queuedDirection))
-    ) {
+    if (current.status !== 'running') {
+      queuedDirectionRef.current = []
       return
     }
 
-    queuedDirectionRef.current = nextDirection
+    queuedDirectionRef.current = enqueueDirection(queuedDirectionRef.current, current.direction, nextDirection)
   }
 
   function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
@@ -470,6 +608,42 @@ export function SnakeGame() {
     event.preventDefault()
 
     if (game.status === 'idle' || game.status === 'game-over') {
+      startGame(nextDirection == 'left' ? 'right' : nextDirection)
+      return
+    }
+
+    queueDirection(nextDirection)
+  }
+
+  function handlePointerDown(event: PointerEvent<HTMLDivElement>) {
+    if (!isMobile) {
+      return
+    }
+
+    wrapperRef.current?.focus()
+    pointerStartRef.current = {
+      x: event.clientX,
+      y: event.clientY,
+    }
+  }
+
+  function handlePointerUp(event: PointerEvent<HTMLDivElement>) {
+    if (!isMobile) {
+      return
+    }
+
+    const pointerStart = pointerStartRef.current
+    pointerStartRef.current = null
+    if (!pointerStart) {
+      return
+    }
+
+    const nextDirection = resolveSwipeDirection(event.clientX - pointerStart.x, event.clientY - pointerStart.y)
+    if (!nextDirection) {
+      return
+    }
+
+    if (game.status === 'idle' || game.status === 'game-over') {
       startGame(nextDirection)
       return
     }
@@ -477,17 +651,25 @@ export function SnakeGame() {
     queueDirection(nextDirection)
   }
 
+  function handlePointerCancel() {
+    pointerStartRef.current = null
+  }
+
   return (
     <div className="flex min-h-0 flex-1 overflow-hidden rounded-[1.5rem] border border-border/70 bg-background/20">
       <div
         aria-label={t.home.panels.games.snake.boardLabel}
-        className="flex min-h-0 flex-1 outline-none focus-visible:ring-2 focus-visible:ring-accent"
+        className="relative flex min-h-0 flex-1 overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-accent"
         onKeyDown={handleKeyDown}
+        onPointerCancel={handlePointerCancel}
+        onPointerDown={handlePointerDown}
+        onPointerUp={handlePointerUp}
         ref={wrapperRef}
         role="application"
+        style={isMobile ? { touchAction: 'none' } : undefined}
         tabIndex={0}
       >
-        <canvas className="block h-full w-full" ref={canvasRef} />
+        <canvas className="absolute left-0 top-0 block" ref={canvasRef} />
       </div>
     </div>
   )
