@@ -32,6 +32,10 @@ export const jaMessages: MessageDictionary = {
       eyebrow: 'ノート',
       notes: [
         {
+          body: '最近、LoRA のチューニングや MLX の研究を始めた。AI が台頭してから、ずっと最新技術を追い続けてきたけれど、だんだん「もう新技術を追い続けるための資本がない」という感覚が強くなってきた。既存の技術に向き合うたびに、こちらがまだ「学習」している段階である限り、すでに AI を使いこなしている人たちの水準には追いつけないと痛感する。だから結局、せめて基礎原理だけでも学ぼうとするしかない。実装する前に、またさらに先端を学ばなければならず、少なくとも知識量だけは追いつきたい、少なくとも競争力だけは失いたくない、と思っている。自分で作った動的 LoRA は展示として悪くないと思うが、高価な設備が足りない。pre-train や全行列チューニングは言うまでもなく、小さな LoRA を載せるだけでもチューニング時間は長く、使えるモデルは小さく、LoRA のサイズにも限界がある。AI の巨大企業は資本の壁を築いていて、資本のない人間は、AI に少しずつ置き換えられていく仕事しかできない側へ押し出されていく。目の前で洪水が押し寄せてくるのに、大企業は目の前の救命浮輪さえ引き剥がし、わずかな幸運の可能性すら与えない。',
+          date: '2026年4月6日',
+        },
+        {
           body: '暮らしの可能性を想像で見立てられないなら、私たちが生きる世界と現実のあいだには断絶があるということだ。',
           date: '2026年4月3日',
         },
@@ -137,10 +141,15 @@ export const jaMessages: MessageDictionary = {
     backHome: 'ホームへ戻る',
     backToProjects: '作品一覧へ戻る',
     ctaGithub: 'GitHub',
+    currentVersionLabel: '現在のバージョン',
     detectedEnvironment: '検出された環境',
     downloadsSectionTitle: 'ダウンロード',
+    latestVersionSuffix: '最新',
     linkSectionTitle: 'リンク',
+    localSystemLabel: 'このデバイス',
     overviewSectionTitle: '概要',
+    platformLabel: 'プラットフォーム',
+    versionLabel: 'バージョン',
     projects: {
       plantCare: {
         sections: {

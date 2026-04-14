@@ -32,8 +32,12 @@ export const zhTWMessages: MessageDictionary = {
       eyebrow: '隨筆',
       notes: [
         {
+          body: '最近開始嘗試去 tunning LoRA，研究 MLX。從 AI 興起後，我一再追著最新技術跑，慢慢開始有種沒有資本再追新技術的感覺。每個既有技術都會讓我發現，只要你還需要「學習」，就永遠追不上那些已知的人利用 AI 能做到的程度。那我就只能盡量學基本原理，來不及實作，又得再往前學更前緣的東西，想著至少知識量要追上，至少讓自己還保有競爭力。自己做的動態 LoRA 好像也是不錯的展示，但沒有足夠高價的設備，不要說從 pre-train、全矩陣 tunning，就算只掛一個小 LoRA，tunning 時間也很長，能用的模型又小，LoRA 大小也有限。AI 大公司正在建立資本壁壘，沒有資本的人被排斥到只能做那些一步一步被 AI 取代的事。眼看洪水朝眼前撲面而來，大公司卻連救生圈都要從你面前抽走，連一點僥倖的機會都不給。',
+          date: '2026 年 04 月 06 日',
+        },
+        {
           body: '若無法用臆想猜測生活的可能性，代表你生活的世界與現實有段落差。',
-          date: '2026 / 04 / 03',
+          date: '2026 年 04 月 03 日',
         },
         {
           body: '隨著 AI 逐步成熟，我不太認同「AI 會讓 Junior 沒工作」這種說法。比較貼近的現實是，工作的內容正在被重新定義。就像自動化機械取代傳統金工一樣，Junior 不再只是學怎麼做，而是要更早學會操作系統、調整參數、理解問題發生的原因，甚至做基本的維修與優化。某種程度上，這其實是在提早接觸過去屬於 Senior 的能力；而那些完全依賴手工、不與系統互動的技能，在規模化的環境裡，生存空間只會越來越小。',
@@ -136,10 +140,15 @@ export const zhTWMessages: MessageDictionary = {
     backHome: '回到首頁',
     backToProjects: '返回作品選單',
     ctaGithub: 'GitHub',
+    currentVersionLabel: '目前版本',
     detectedEnvironment: '目前偵測裝置',
     downloadsSectionTitle: '下載說明',
+    latestVersionSuffix: '最新',
     linkSectionTitle: '相關連結',
+    localSystemLabel: '本機系統',
     overviewSectionTitle: '專案介紹',
+    platformLabel: '平台',
+    versionLabel: '版本',
     projects: {
       plantCare: {
         sections: {

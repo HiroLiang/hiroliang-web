@@ -2,6 +2,13 @@ import { type ReactNode, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { CHAT_BUBBLE_BASE_CLASS_NAME, getChatBubbleClassName } from '@/features/home/chat-bubbles'
 import { GamesPanel } from '@/features/home/games'
 import { useMessages } from '@/hooks/use-locale'
@@ -9,11 +16,10 @@ import { useDetectedPlatform } from '@/features/project/use-detected-platform'
 import {
   GITHUB_PROFILE_URL,
   HOME_SKILLS,
-  MAC_DOWNLOAD_URL,
   PROJECT_ENTRIES,
   TENTSERV_CHAT_REPOSITORY_URL,
-  WINDOWS_DOWNLOAD_URL,
 } from '@/features/home/content'
+import { useTentservReleases } from '@/features/home/use-tentserv-releases'
 import type { HomePanelType, ProjectEntry } from '@/features/home/types'
 
 function SectionShell({
@@ -123,53 +129,106 @@ export function GithubPanel() {
 }
 
 function ProjectDownloadContent() {
-  const platform = useDetectedPlatform()
+  const detectedPlatform = useDetectedPlatform()
   const t = useMessages()
-  const platformLabels = t.project.platforms.labels
+  const { config, latestRelease, loading, error } = useTentservReleases()
+  const [selectedVersionKey, setSelectedVersionKey] = useState<string>('latest')
+  const initPlatform = detectedPlatform === 'windows' ? 'windows' : 'mac'
+  const [platformSelection, setPlatformSelection] = useState<'mac' | 'windows'>(initPlatform)
 
+  if (loading) {
+    return (
+      <p className="text-sm text-muted-foreground">{t.project.currentVersionLabel}…</p>
+    )
+  }
+
+  if (error || !latestRelease || !config) {
+    return null
+  }
+
+  const selectedRelease =
+    selectedVersionKey === 'latest'
+      ? latestRelease
+      : (config.releases.find((r) => r.version === selectedVersionKey) ?? latestRelease)
+
+  const macUrl = selectedRelease.downloads.mac
+  const windowsUrl = selectedRelease.downloads.windows
+
+  const platformLabels = t.project.platforms.labels
   const sectionByPlatform = {
-    desktop: t.project.platforms.desktop,
     mac: t.project.platforms.mac,
-    mobile: t.project.platforms.mobile,
     windows: t.project.platforms.windows,
-  }[platform]
+  }[platformSelection]
+
+  const isDetectedMac = detectedPlatform === 'mac'
+  const isDetectedWindows = detectedPlatform === 'windows'
+
+  const otherVersions = config.releases.filter((r) => r.version !== config.latest)
 
   return (
     <div className="space-y-4">
-      <p className="text-sm text-muted-foreground">
-        {t.project.detectedEnvironment}:{' '}
-        <strong className="text-foreground">{platformLabels[platform]}</strong>
-      </p>
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
-        {sectionByPlatform.eyebrow}
-      </p>
-      <h3 className="text-2xl font-semibold leading-tight tracking-[-0.02em] text-foreground">
-        {sectionByPlatform.title}
-      </h3>
-      <p className="text-base leading-8 text-muted-foreground">{sectionByPlatform.body}</p>
+      {/* Version selector */}
+      <div className="flex items-center gap-3">
+        <span className="min-w-[4.5rem] text-sm text-muted-foreground">{t.project.versionLabel}</span>
+        <Select value={selectedVersionKey} onValueChange={setSelectedVersionKey}>
+          <SelectTrigger className="w-52">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="latest">
+              {config.latest} ({t.project.latestVersionSuffix})
+            </SelectItem>
+            {otherVersions.map((r) => (
+              <SelectItem key={r.version} value={r.version}>
+                {r.version}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
 
-      {platform === 'mac' ? (
-        <Button asChild>
-          <a href={MAC_DOWNLOAD_URL}>{t.project.platforms.mac.download}</a>
-        </Button>
-      ) : null}
-
-      {platform === 'windows' ? (
-        <Button asChild>
-          <a href={WINDOWS_DOWNLOAD_URL}>{t.project.platforms.windows.download}</a>
-        </Button>
-      ) : null}
-
-      {platform === 'desktop' ? (
-        <div className="flex flex-wrap gap-3">
-          <Button asChild>
-            <a href={MAC_DOWNLOAD_URL}>{t.project.platforms.desktop.downloadMac}</a>
+      {/* Platform toggle */}
+      <div className="flex flex-wrap items-center gap-3">
+        <span className="min-w-[4.5rem] text-sm text-muted-foreground">{t.project.platformLabel}</span>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant={platformSelection === 'mac' ? 'default' : 'outline'}
+            onClick={() => setPlatformSelection('mac')}
+          >
+            {platformLabels.mac}
+            {isDetectedMac ? <span className="ml-1.5 opacity-60 text-xs">({t.project.localSystemLabel})</span> : null}
           </Button>
-          <Button asChild variant="outline">
-            <a href={WINDOWS_DOWNLOAD_URL}>{t.project.platforms.desktop.downloadWindows}</a>
+          <Button
+            variant={platformSelection === 'windows' ? 'default' : 'outline'}
+            onClick={() => setPlatformSelection('windows')}
+          >
+            {platformLabels.windows}
+            {isDetectedWindows ? <span className="ml-1.5 opacity-60 text-xs">({t.project.localSystemLabel})</span> : null}
           </Button>
         </div>
-      ) : null}
+      </div>
+
+      <div className="border-t border-border pt-4 space-y-4">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
+          {sectionByPlatform.eyebrow}
+        </p>
+        <h3 className="text-2xl font-semibold leading-tight tracking-[-0.02em] text-foreground">
+          {sectionByPlatform.title}
+        </h3>
+        <p className="text-base leading-8 text-muted-foreground">{sectionByPlatform.body}</p>
+
+        {platformSelection === 'mac' && macUrl ? (
+          <Button asChild>
+            <a href={macUrl}>{t.project.platforms.mac.download}</a>
+          </Button>
+        ) : null}
+
+        {platformSelection === 'windows' && windowsUrl ? (
+          <Button asChild>
+            <a href={windowsUrl}>{t.project.platforms.windows.download}</a>
+          </Button>
+        ) : null}
+      </div>
     </div>
   )
 }

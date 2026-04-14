@@ -111,10 +111,15 @@ export type MessageDictionary = {
     backHome: string
     backToProjects: string
     ctaGithub: string
+    currentVersionLabel: string
     detectedEnvironment: string
     downloadsSectionTitle: string
+    latestVersionSuffix: string
     linkSectionTitle: string
+    localSystemLabel: string
     overviewSectionTitle: string
+    platformLabel: string
+    versionLabel: string
     projects: {
       plantCare: {
         sections: {

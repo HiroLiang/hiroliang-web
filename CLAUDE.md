@@ -56,3 +56,12 @@ VITE_USE_CUSTOM_FONT=
 - Feature logic should stay inside `src/features/<feature>/`.
 - `@/` maps to `src/`.
 - The homepage chat stream is handled in `src/features/home/api.ts`.
+
+## Localization guardrails (strict)
+
+- For Traditional Chinese locale (`src/locales/zh-TW.ts`), all `home.experience.notes[*].date` values must use: `YYYY 年 MM 月 DD 日`.
+- Do not use slash format (for example, `YYYY / MM / DD`) in `zh-TW` notes.
+- When editing any notes content, ensure date formats remain internally consistent per locale before finishing:
+  - `zh-TW`: `YYYY 年 MM 月 DD 日`
+  - `en`: `YYYY / MM / DD`
+  - `ja`: `YYYY年M月D日`

@@ -32,6 +32,10 @@ export const enMessages: MessageDictionary = {
       eyebrow: 'Notes',
       notes: [
         {
+          body: 'Recently I started trying to tune LoRA and study MLX. Since the rise of AI, I have kept chasing the newest techniques, and slowly I have begun to feel that I no longer have the capital to keep up. Every established technique reminds me that as long as you are still “learning,” you will never catch up to what people already know how to do with AI. So I can only try to learn the fundamentals; before I can even implement them, I have to move forward again to learn something more cutting-edge, telling myself that at least I can keep up in knowledge, at least keep some competitiveness. The dynamic LoRA I built seems like a decent showcase, but without expensive enough hardware, I cannot even talk about pre-training or full-matrix tuning. Even mounting a small LoRA takes a long tuning time, the models I can use are small, and LoRA size is also limited. Big AI companies are building a capital moat. People without capital are being pushed into work that AI is replacing step by step. You can see the flood rushing straight at you, while the big companies pull away even the life buoy in front of your eyes, leaving not even a tiny chance of luck.',
+          date: '2026 / 04 / 06',
+        },
+        {
           body: 'If we cannot use imagination to sense what life could be, it suggests a gap between the world we live in and reality.',
           date: '2026 / 04 / 03',
         },
@@ -137,10 +141,15 @@ export const enMessages: MessageDictionary = {
     backHome: 'Back to home',
     backToProjects: 'Back to projects',
     ctaGithub: 'GitHub',
+    currentVersionLabel: 'Current version',
     detectedEnvironment: 'Detected environment',
     downloadsSectionTitle: 'Downloads',
+    latestVersionSuffix: 'latest',
     linkSectionTitle: 'Links',
+    localSystemLabel: 'This device',
     overviewSectionTitle: 'Overview',
+    platformLabel: 'Platform',
+    versionLabel: 'Version',
     projects: {
       plantCare: {
         sections: {
