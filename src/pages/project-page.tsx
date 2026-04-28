@@ -11,7 +11,7 @@ export function ProjectPage() {
       <div className="space-y-8 pb-6">
         <ProjectsPanel
           className="min-h-0"
-          initialProjectId="tentserv-chat"
+          initialProjectId="tentserv-agent"
           startWithSelector={false}
           showRouteLink={false}
         />

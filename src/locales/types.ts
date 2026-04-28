@@ -151,6 +151,54 @@ export type MessageDictionary = {
         summary: string
         title: string
       }
+      tentservAgent: {
+        commands: {
+          body: string
+          command: string
+          title: string
+        }[]
+        install: {
+          mac: {
+            body: string
+            command: string
+            title: string
+          }
+          verify: {
+            body: string
+            command: string
+            title: string
+          }
+          windows: {
+            body: string
+            command: string
+            title: string
+          }
+        }
+        sections: {
+          architecture: {
+            body: string
+            title: string
+          }
+          intro: {
+            body: string
+            title: string
+          }
+          runtime: {
+            body: string
+            title: string
+          }
+          stack: {
+            body: string
+            title: string
+          }
+          status: {
+            body: string
+            title: string
+          }
+        }
+        summary: string
+        title: string
+      }
       tentservChat: {
         sections: {
           overview: {
@@ -186,6 +234,8 @@ export type MessageDictionary = {
     }
     selectorLabel: string
     selectorPrompt: string
+    installSectionTitle: string
+    commandsSectionTitle: string
     hero: {
       body: string
       eyebrow: string

@@ -151,6 +151,66 @@ export const enMessages: MessageDictionary = {
     platformLabel: 'Platform',
     versionLabel: 'Version',
     projects: {
+      tentservAgent: {
+        commands: [
+          {
+            body: 'List locally managed models and find the model ref you want to use.',
+            command: 'tentgent model ls',
+            title: 'model ls',
+          },
+          {
+            body: 'Pull a small test model from Hugging Face.',
+            command: 'tentgent model pull google/gemma-3-1b-it',
+            title: 'model pull',
+          },
+          {
+            body: 'Run a simple one-shot chat with a selected model. Tentgent currently routes one-shot runs through the chat command.',
+            command: 'tentgent chat <model-ref> --message "user:Hello there"',
+            title: 'model run',
+          },
+        ],
+        install: {
+          mac: {
+            body: 'Recommended macOS install from the latest GitHub Release.',
+            command: 'curl -fsSL https://github.com/HiroLiang/tentserv-agent/releases/latest/download/install.sh | sh',
+            title: 'macOS',
+          },
+          verify: {
+            body: 'Make sure the default install location is on PATH, then verify the runtime.',
+            command: 'case ":$PATH:" in\n  *":$HOME/.local/bin:"*) ;;\n  *) export PATH="$HOME/.local/bin:$PATH" ;;\nesac\ntentgent doctor',
+            title: 'Verify',
+          },
+          windows: {
+            body: 'Recommended Windows install from the latest GitHub Release using PowerShell.',
+            command: 'irm https://github.com/HiroLiang/tentserv-agent/releases/latest/download/install.ps1 | iex',
+            title: 'Windows PowerShell',
+          },
+        },
+        sections: {
+          architecture: {
+            body: 'Architecturally, Tentgent uses the CLI as a single control surface for models, adapters, datasets, and local deployment flows. The core idea is to let users deploy multiple models at the same time and dynamically switch adapters, enabling one base model to support several distinct application behaviors.',
+            title: 'Architecture',
+          },
+          intro: {
+            body: 'Tentgent is a CLI tool for large language models and extensions. It helps users pull, manage, and run multiple Hugging Face models and adapters according to their needs and available hardware, bringing model acquisition, adapter management, local execution, and application switching into one workflow.',
+            title: 'Intro',
+          },
+          runtime: {
+            body: 'The current version supports Hugging Face access key management, importing and using both local and remote models and adapters, and tuning different LoRA adapters with the user’s own datasets so each use case can evolve from the same local toolchain.',
+            title: 'Runtime',
+          },
+          stack: {
+            body: 'Rust, Python, MLX, PEFT, llama.cpp / GGUF, Hugging Face, macOS, Windows',
+            title: 'Tech Stack',
+          },
+          status: {
+            body: 'Future work will connect OpenAI and Claude API keys, then use built-in contracts to generate datasets. The goal is to make it easier to tune multiple application-specific behaviors from the same base model and deploy them locally when needed.',
+            title: 'Status',
+          },
+        },
+        summary: 'A CLI tool for large language models and adapter-based extensions, built to manage Hugging Face models, local deployment, LoRA tuning, and multi-application switching.',
+        title: 'Tentgent',
+      },
       plantCare: {
         sections: {
           architecture: {
@@ -216,6 +276,8 @@ export const enMessages: MessageDictionary = {
     },
     selectorLabel: 'Projects',
     selectorPrompt: 'Choose a project to open its detail view.',
+    installSectionTitle: 'Install commands',
+    commandsSectionTitle: 'Basic commands',
     hero: {
       body: 'A desktop release with separate installers for macOS and Windows, presented in a simple page that adapts to the device you are currently using.',
       eyebrow: 'Featured Project',

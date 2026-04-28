@@ -150,6 +150,66 @@ export const zhTWMessages: MessageDictionary = {
     platformLabel: '平台',
     versionLabel: '版本',
     projects: {
+      tentservAgent: {
+        commands: [
+          {
+            body: '列出本機已管理的模型，確認可用的 model ref。',
+            command: 'tentgent model ls',
+            title: 'model ls',
+          },
+          {
+            body: '從 Hugging Face 拉取一個可測試的小型模型。',
+            command: 'tentgent model pull google/gemma-3-1b-it',
+            title: 'model pull',
+          },
+          {
+            body: '用指定模型執行一次簡單對話。Tentgent 目前以 chat 指令承接 one-shot run。',
+            command: 'tentgent chat <model-ref> --message "user:Hello there"',
+            title: 'model run',
+          },
+        ],
+        install: {
+          mac: {
+            body: '推薦從最新 GitHub Release 安裝 macOS 版本。',
+            command: 'curl -fsSL https://github.com/HiroLiang/tentserv-agent/releases/latest/download/install.sh | sh',
+            title: 'macOS',
+          },
+          verify: {
+            body: '確認預設安裝路徑可用，並檢查本機 runtime 狀態。',
+            command: 'case ":$PATH:" in\n  *":$HOME/.local/bin:"*) ;;\n  *) export PATH="$HOME/.local/bin:$PATH" ;;\nesac\ntentgent doctor',
+            title: 'Verify',
+          },
+          windows: {
+            body: '推薦使用 PowerShell 從最新 GitHub Release 安裝 Windows 版本。',
+            command: 'irm https://github.com/HiroLiang/tentserv-agent/releases/latest/download/install.ps1 | iex',
+            title: 'Windows PowerShell',
+          },
+        },
+        sections: {
+          architecture: {
+            body: '架構上，Tentgent 以 CLI 作為統一入口，讓模型、adapter、dataset 與本地部署流程可以被同一套指令管理。它的核心設計是讓使用者能夠同時部署多個模型，並在不同 adapter 之間動態切換，形成「單一基礎模型，多種應用能力」的運作方式。',
+            title: 'Architecture',
+          },
+          intro: {
+            body: 'Tentgent 是一個支援大語言模型與擴展能力的 CLI 工具，讓使用者可以依照需求與設備條件，拉取、管理並使用多個不同的 Hugging Face 模型與 adapter。它把模型取得、adapter 管理、本地執行與應用切換整合在同一個操作介面裡，降低本地 AI 工具鏈的使用門檻。',
+            title: 'Intro',
+          },
+          runtime: {
+            body: '目前已支援 Hugging Face Access Key 管理、本地與線上 model / adapter 的匯入與使用，也讓使用者可以用自己的測資 tuning 不同的 LoRA，逐步建立符合特定情境的模型擴展能力。',
+            title: 'Runtime',
+          },
+          stack: {
+            body: 'Rust、Python、MLX、PEFT、llama.cpp / GGUF、Hugging Face、macOS、Windows',
+            title: 'Tech Stack',
+          },
+          status: {
+            body: '後續會串接 OpenAI API key 與 Claude API key，並支援使用內建 contract 產出測資，讓使用者更容易針對同一個基礎模型調適出多種應用形態，再依需要部署到本地環境。',
+            title: 'Status',
+          },
+        },
+        summary: '一個支援大語言模型與 adapter 擴展的 CLI 工具，用來管理 Hugging Face 模型、本地部署、LoRA tuning 與多應用切換。',
+        title: 'Tentgent',
+      },
       plantCare: {
         sections: {
           architecture: {
@@ -215,6 +275,8 @@ export const zhTWMessages: MessageDictionary = {
     },
     selectorLabel: 'Projects',
     selectorPrompt: '先選擇一個 project，再開啟它的介紹內容。',
+    installSectionTitle: '安裝指令',
+    commandsSectionTitle: '基礎指令',
     hero: {
       body: '這是一個桌面版聊天應用釋出頁，提供 macOS 與 Windows 的獨立安裝檔，並會依你目前的裝置顯示相應內容。',
       eyebrow: '精選作品',

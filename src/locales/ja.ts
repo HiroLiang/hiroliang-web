@@ -151,6 +151,66 @@ export const jaMessages: MessageDictionary = {
     platformLabel: 'プラットフォーム',
     versionLabel: 'バージョン',
     projects: {
+      tentservAgent: {
+        commands: [
+          {
+            body: 'ローカルで管理しているモデルを一覧し、利用する model ref を確認します。',
+            command: 'tentgent model ls',
+            title: 'model ls',
+          },
+          {
+            body: 'Hugging Face から小さなテスト用モデルを取得します。',
+            command: 'tentgent model pull google/gemma-3-1b-it',
+            title: 'model pull',
+          },
+          {
+            body: '選択したモデルで一回だけチャットを実行します。Tentgent では現時点で one-shot run を chat コマンドで扱います。',
+            command: 'tentgent chat <model-ref> --message "user:Hello there"',
+            title: 'model run',
+          },
+        ],
+        install: {
+          mac: {
+            body: '最新の GitHub Release から macOS 版をインストールします。',
+            command: 'curl -fsSL https://github.com/HiroLiang/tentserv-agent/releases/latest/download/install.sh | sh',
+            title: 'macOS',
+          },
+          verify: {
+            body: '標準インストール先を PATH に入れ、runtime を確認します。',
+            command: 'case ":$PATH:" in\n  *":$HOME/.local/bin:"*) ;;\n  *) export PATH="$HOME/.local/bin:$PATH" ;;\nesac\ntentgent doctor',
+            title: 'Verify',
+          },
+          windows: {
+            body: 'PowerShell で最新の GitHub Release から Windows 版をインストールします。',
+            command: 'irm https://github.com/HiroLiang/tentserv-agent/releases/latest/download/install.ps1 | iex',
+            title: 'Windows PowerShell',
+          },
+        },
+        sections: {
+          architecture: {
+            body: 'アーキテクチャとしては、Tentgent は CLI を単一の操作面として使い、モデル、adapter、dataset、ローカルデプロイの流れを同じ指令体系で扱います。複数のモデルを同時に配置し、adapter を動的に切り替えることで、一つの基礎モデルから複数の用途を実現する構成を目指しています。',
+            title: 'Architecture',
+          },
+          intro: {
+            body: 'Tentgent は、大規模言語モデルとその拡張を扱うための CLI ツールです。ユーザーの用途や利用できるデバイスに合わせて、複数の Hugging Face モデルや adapter を取得・管理・実行でき、モデル取得、adapter 管理、ローカル実行、用途ごとの切り替えを一つの操作フローにまとめます。',
+            title: 'Intro',
+          },
+          runtime: {
+            body: '現在は Hugging Face Access Key の管理、ローカルおよびオンラインの model / adapter のインポートと利用、さらにユーザー自身の評価データや学習データを使った LoRA tuning をサポートしています。同じツールチェーン上で、用途ごとの adapter を育てていける構成です。',
+            title: 'Runtime',
+          },
+          stack: {
+            body: 'Rust、Python、MLX、PEFT、llama.cpp / GGUF、Hugging Face、macOS、Windows',
+            title: 'Tech Stack',
+          },
+          status: {
+            body: '今後は OpenAI API key と Claude API key の連携に加え、内蔵 contract から測定用データを生成する機能を追加する予定です。同じ基礎モデルから複数の用途に合わせた振る舞いを調整し、必要に応じてローカル環境へ展開しやすくすることを目指しています。',
+            title: 'Status',
+          },
+        },
+        summary: '大規模言語モデルと adapter 拡張を扱う CLI ツール。Hugging Face モデル、ローカルデプロイ、LoRA tuning、複数用途への切り替えを管理します。',
+        title: 'Tentgent',
+      },
       plantCare: {
         sections: {
           architecture: {
@@ -216,6 +276,8 @@ export const jaMessages: MessageDictionary = {
     },
     selectorLabel: 'Projects',
     selectorPrompt: '表示したい project を選択してください。',
+    installSectionTitle: 'インストールコマンド',
+    commandsSectionTitle: '基本コマンド',
     hero: {
       body: 'このページは macOS / Windows 向けの個別インストーラを提供し、現在の端末に合わせて案内を切り替えます。',
       eyebrow: '注目プロジェクト',
