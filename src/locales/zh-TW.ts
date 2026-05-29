@@ -153,31 +153,31 @@ export const zhTWMessages: MessageDictionary = {
       tentservAgent: {
         commands: [
           {
-            body: '列出本機已管理的模型，確認可用的 model ref。',
-            command: 'tentgent model ls',
-            title: 'model ls',
+            body: '檢查 managed runtime、bootstrap 狀態與缺少的模組，先確認本機模型工作負載的執行條件。',
+            command: 'tentgent runtime status',
+            title: 'runtime status',
           },
           {
-            body: '從 Hugging Face 拉取一個可測試的小型模型。',
-            command: 'tentgent model pull google/gemma-3-1b-it',
-            title: 'model pull',
+            body: '透過 Tentgent 的 Rust server runtime，為雲端模型開出 OpenAI-compatible 的本機 server。',
+            command: 'tentgent server run openai:gpt-4.1-mini --host 127.0.0.1 --port 8780',
+            title: 'cloud server',
           },
           {
-            body: '用指定模型執行一次簡單對話。Tentgent 目前以 chat 指令承接 one-shot run。',
-            command: 'tentgent chat <model-ref> --message "user:Hello there"',
-            title: 'model run',
+            body: '啟動本機 REST daemon，用同一個 API surface 管理狀態、store、dataset、chat、server、training 與 session workflow。',
+            command: 'tentgent daemon start --host 127.0.0.1 --port 8790\ncurl -sS http://127.0.0.1:8790/healthz',
+            title: 'daemon API',
           },
         ],
         install: {
           mac: {
-            body: '推薦從最新 GitHub Release 安裝 macOS 版本。',
-            command: 'curl -fsSL https://github.com/HiroLiang/tentserv-agent/releases/latest/download/install.sh | sh',
-            title: 'macOS',
+            body: 'macOS 建議透過專案 Homebrew tap 安裝。CLI 安裝後，再用 runtime bootstrap 準備 managed Python environment。',
+            command: 'brew tap hiroliang/tap\nbrew install hiroliang/tap/tentgent\ntentgent runtime bootstrap\ntentgent doctor\ntentgent --version',
+            title: 'macOS Homebrew',
           },
           verify: {
-            body: '確認預設安裝路徑可用，並檢查本機 runtime 狀態。',
-            command: 'case ":$PATH:" in\n  *":$HOME/.local/bin:"*) ;;\n  *) export PATH="$HOME/.local/bin:$PATH" ;;\nesac\ntentgent doctor',
-            title: 'Verify',
+            body: '檢查 runtime 狀態，並在需要本機 backend dependency 時 bootstrap 完整 model-runtime profile。',
+            command: 'tentgent runtime status\ntentgent runtime bootstrap --profile full\ntentgent doctor',
+            title: 'Runtime check',
           },
           windows: {
             body: '推薦使用 PowerShell 從最新 GitHub Release 安裝 Windows 版本。',
@@ -187,27 +187,27 @@ export const zhTWMessages: MessageDictionary = {
         },
         sections: {
           architecture: {
-            body: '架構上，Tentgent 以 CLI 作為統一入口，讓模型、adapter、dataset 與本地部署流程可以被同一套指令管理。它的核心設計是讓使用者能夠同時部署多個模型，並在不同 adapter 之間動態切換，形成「單一基礎模型，多種應用能力」的運作方式。',
+            body: '目前架構以 Rust CLI、daemon REST surface 與共享的 Python model-runtime daemon 為核心。本機 server 會透過 Rust proxy 綁定指定模型或 capability，再把 request 轉送到共享 runtime；雲端 provider server 則透過同一個操作面提供 OpenAI、Claude、Gemini 相容的 chat route。',
             title: 'Architecture',
           },
           intro: {
-            body: 'Tentgent 是一個支援大語言模型與擴展能力的 CLI 工具，讓使用者可以依照需求與設備條件，拉取、管理並使用多個不同的 Hugging Face 模型與 adapter。它把模型取得、adapter 管理、本地執行與應用切換整合在同一個操作介面裡，降低本地 AI 工具鏈的使用門檻。',
+            body: 'Tentgent 是 local-first 的 AI workflow operator：以 Rust CLI 搭配本機 daemon API，在使用者自己的機器上管理 model runtime、server route、dataset、LoRA training 與 bounded working session。',
             title: 'Intro',
           },
           runtime: {
-            body: '目前已支援 Hugging Face Access Key 管理、本地與線上 model / adapter 的匯入與使用，也讓使用者可以用自己的測資 tuning 不同的 LoRA，逐步建立符合特定情境的模型擴展能力。',
+            body: '目前 release line 已支援 provider key 管理、content-addressed model / adapter / dataset store、one-shot local call、雲端與本機 server runtime、daemon job、runtime diagnostics，以及 chat、embedding、rerank、audio、vision、image、video、LoRA 等 endpoint family 的 capability metadata。',
             title: 'Runtime',
           },
           stack: {
-            body: 'Rust、Python、MLX、PEFT、llama.cpp / GGUF、Hugging Face、macOS、Windows',
+            body: 'Rust、Python、MLX、PEFT、Diffusers、MFLUX、llama.cpp / GGUF、Hugging Face、OpenAI、Anthropic、Gemini、macOS、Windows、Linux x86_64 preview',
             title: 'Tech Stack',
           },
           status: {
-            body: '後續會串接 OpenAI API key 與 Claude API key，並支援使用內建 contract 產出測資，讓使用者更容易針對同一個基礎模型調適出多種應用形態，再依需要部署到本地環境。',
+            body: '最新 stable line 是 v0.5.x，重點在成熟化 model-runtime server path、共享 runtime lifecycle、Rust local-server proxy、cloud provider runtime、runtime bootstrap 可靠性與更清楚的診斷輸出。Linux x86_64 release asset 已提供，但 full managed runtime 與本機 backend parity 仍以分階段 rollout 看待。',
             title: 'Status',
           },
         },
-        summary: '一個支援大語言模型與 adapter 擴展的 CLI 工具，用來管理 Hugging Face 模型、本地部署、LoRA tuning 與多應用切換。',
+        summary: '一個 local-first AI workflow operator，結合 Rust CLI、daemon REST API、model-runtime 管理、雲端 / 本機 server route、dataset、LoRA workflow 與 bounded working session。',
         title: 'Tentgent',
       },
       plantCare: {

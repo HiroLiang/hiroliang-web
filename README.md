@@ -8,8 +8,8 @@ Live site: [hiroliang.com](https://hiroliang.com)
 
 - Chat-style homepage with slash-command panels
 - Shared project detail experience on the homepage and `/project`
-- Lightweight browser games under `/games`
-- Traditional Chinese and English localization
+- Lightweight browser games under the `/games` slash-command panel
+- English, Traditional Chinese, and Japanese localization
 
 ## Tech Stack
 
@@ -58,6 +58,7 @@ VITE_USE_CUSTOM_FONT=
 - `src/features/home/api.ts`: chat streaming request handling
 - `src/locales/en.ts`: English copy
 - `src/locales/zh-TW.ts`: Traditional Chinese copy
+- `src/locales/ja.ts`: Japanese copy
 
 ## Notes
 

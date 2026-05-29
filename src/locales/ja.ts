@@ -154,31 +154,31 @@ export const jaMessages: MessageDictionary = {
       tentservAgent: {
         commands: [
           {
-            body: 'ローカルで管理しているモデルを一覧し、利用する model ref を確認します。',
-            command: 'tentgent model ls',
-            title: 'model ls',
+            body: 'モデルワークロードを動かす前に、managed runtime、bootstrap 状態、不足しているモジュールを確認します。',
+            command: 'tentgent runtime status',
+            title: 'runtime status',
           },
           {
-            body: 'Hugging Face から小さなテスト用モデルを取得します。',
-            command: 'tentgent model pull google/gemma-3-1b-it',
-            title: 'model pull',
+            body: 'Tentgent の Rust server runtime を通して、クラウドモデルを OpenAI-compatible なローカル server として公開します。',
+            command: 'tentgent server run openai:gpt-4.1-mini --host 127.0.0.1 --port 8780',
+            title: 'cloud server',
           },
           {
-            body: '選択したモデルで一回だけチャットを実行します。Tentgent では現時点で one-shot run を chat コマンドで扱います。',
-            command: 'tentgent chat <model-ref> --message "user:Hello there"',
-            title: 'model run',
+            body: 'status、store、dataset、chat、server、training、session workflow を扱うローカル REST daemon を起動します。',
+            command: 'tentgent daemon start --host 127.0.0.1 --port 8790\ncurl -sS http://127.0.0.1:8790/healthz',
+            title: 'daemon API',
           },
         ],
         install: {
           mac: {
-            body: '最新の GitHub Release から macOS 版をインストールします。',
-            command: 'curl -fsSL https://github.com/HiroLiang/tentserv-agent/releases/latest/download/install.sh | sh',
-            title: 'macOS',
+            body: 'macOS では project Homebrew tap からのインストールを推奨します。CLI インストール後、runtime bootstrap で managed Python environment を準備します。',
+            command: 'brew tap hiroliang/tap\nbrew install hiroliang/tap/tentgent\ntentgent runtime bootstrap\ntentgent doctor\ntentgent --version',
+            title: 'macOS Homebrew',
           },
           verify: {
-            body: '標準インストール先を PATH に入れ、runtime を確認します。',
-            command: 'case ":$PATH:" in\n  *":$HOME/.local/bin:"*) ;;\n  *) export PATH="$HOME/.local/bin:$PATH" ;;\nesac\ntentgent doctor',
-            title: 'Verify',
+            body: 'runtime 状態を確認し、ローカル backend dependency が必要な場合は full model-runtime profile を bootstrap します。',
+            command: 'tentgent runtime status\ntentgent runtime bootstrap --profile full\ntentgent doctor',
+            title: 'Runtime check',
           },
           windows: {
             body: 'PowerShell で最新の GitHub Release から Windows 版をインストールします。',
@@ -188,27 +188,27 @@ export const jaMessages: MessageDictionary = {
         },
         sections: {
           architecture: {
-            body: 'アーキテクチャとしては、Tentgent は CLI を単一の操作面として使い、モデル、adapter、dataset、ローカルデプロイの流れを同じ指令体系で扱います。複数のモデルを同時に配置し、adapter を動的に切り替えることで、一つの基礎モデルから複数の用途を実現する構成を目指しています。',
+            body: '現在のアーキテクチャは、Rust CLI、daemon REST surface、共有 Python model-runtime daemon を中心に構成されています。ローカル server は Rust proxy 経由で指定された model や capability を bind し、request を共有 runtime に転送します。クラウド provider server も同じ操作面から OpenAI、Claude、Gemini compatible な chat route を提供します。',
             title: 'Architecture',
           },
           intro: {
-            body: 'Tentgent は、大規模言語モデルとその拡張を扱うための CLI ツールです。ユーザーの用途や利用できるデバイスに合わせて、複数の Hugging Face モデルや adapter を取得・管理・実行でき、モデル取得、adapter 管理、ローカル実行、用途ごとの切り替えを一つの操作フローにまとめます。',
+            body: 'Tentgent は local-first な AI workflow operator です。Rust CLI とローカル daemon API により、自分のマシン上で model runtime、server route、dataset、LoRA training、bounded working session を管理します。',
             title: 'Intro',
           },
           runtime: {
-            body: '現在は Hugging Face Access Key の管理、ローカルおよびオンラインの model / adapter のインポートと利用、さらにユーザー自身の評価データや学習データを使った LoRA tuning をサポートしています。同じツールチェーン上で、用途ごとの adapter を育てていける構成です。',
+            body: '現在の release line は、provider key 管理、content-addressed model / adapter / dataset store、one-shot local call、クラウドおよびローカル server runtime、daemon job、runtime diagnostics、chat・embedding・rerank・audio・vision・image・video・LoRA endpoint family 向けの capability metadata を扱います。',
             title: 'Runtime',
           },
           stack: {
-            body: 'Rust、Python、MLX、PEFT、llama.cpp / GGUF、Hugging Face、macOS、Windows',
+            body: 'Rust、Python、MLX、PEFT、Diffusers、MFLUX、llama.cpp / GGUF、Hugging Face、OpenAI、Anthropic、Gemini、macOS、Windows、Linux x86_64 preview',
             title: 'Tech Stack',
           },
           status: {
-            body: '今後は OpenAI API key と Claude API key の連携に加え、内蔵 contract から測定用データを生成する機能を追加する予定です。同じ基礎モデルから複数の用途に合わせた振る舞いを調整し、必要に応じてローカル環境へ展開しやすくすることを目指しています。',
+            body: '最新 stable line は v0.5.x です。成熟した model-runtime server path、共有 runtime lifecycle、Rust local-server proxy、cloud provider runtime、runtime bootstrap の信頼性、読みやすい diagnostics に重点を置いています。Linux x86_64 release asset は提供されていますが、full managed runtime とローカル backend parity は段階的な rollout として扱われています。',
             title: 'Status',
           },
         },
-        summary: '大規模言語モデルと adapter 拡張を扱う CLI ツール。Hugging Face モデル、ローカルデプロイ、LoRA tuning、複数用途への切り替えを管理します。',
+        summary: 'Rust CLI、daemon REST API、model-runtime 管理、クラウド / ローカル server route、dataset、LoRA workflow、bounded working session を組み合わせた local-first AI workflow operator。',
         title: 'Tentgent',
       },
       plantCare: {

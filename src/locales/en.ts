@@ -154,31 +154,31 @@ export const enMessages: MessageDictionary = {
       tentservAgent: {
         commands: [
           {
-            body: 'List locally managed models and find the model ref you want to use.',
-            command: 'tentgent model ls',
-            title: 'model ls',
+            body: 'Inspect the managed runtime, bootstrap state, and missing modules before running model workloads.',
+            command: 'tentgent runtime status',
+            title: 'runtime status',
           },
           {
-            body: 'Pull a small test model from Hugging Face.',
-            command: 'tentgent model pull google/gemma-3-1b-it',
-            title: 'model pull',
+            body: 'Expose an OpenAI-compatible local server for a cloud model through Tentgent’s Rust server runtime.',
+            command: 'tentgent server run openai:gpt-4.1-mini --host 127.0.0.1 --port 8780',
+            title: 'cloud server',
           },
           {
-            body: 'Run a simple one-shot chat with a selected model. Tentgent currently routes one-shot runs through the chat command.',
-            command: 'tentgent chat <model-ref> --message "user:Hello there"',
-            title: 'model run',
+            body: 'Start the local REST daemon for status, store, dataset, chat, server, training, and session workflows.',
+            command: 'tentgent daemon start --host 127.0.0.1 --port 8790\ncurl -sS http://127.0.0.1:8790/healthz',
+            title: 'daemon API',
           },
         ],
         install: {
           mac: {
-            body: 'Recommended macOS install from the latest GitHub Release.',
-            command: 'curl -fsSL https://github.com/HiroLiang/tentserv-agent/releases/latest/download/install.sh | sh',
-            title: 'macOS',
+            body: 'Recommended macOS install through the project Homebrew tap. Runtime bootstrap prepares the managed Python environment after the CLI is installed.',
+            command: 'brew tap hiroliang/tap\nbrew install hiroliang/tap/tentgent\ntentgent runtime bootstrap\ntentgent doctor\ntentgent --version',
+            title: 'macOS Homebrew',
           },
           verify: {
-            body: 'Make sure the default install location is on PATH, then verify the runtime.',
-            command: 'case ":$PATH:" in\n  *":$HOME/.local/bin:"*) ;;\n  *) export PATH="$HOME/.local/bin:$PATH" ;;\nesac\ntentgent doctor',
-            title: 'Verify',
+            body: 'Inspect runtime state and bootstrap the full model-runtime profile when local backend dependencies are needed.',
+            command: 'tentgent runtime status\ntentgent runtime bootstrap --profile full\ntentgent doctor',
+            title: 'Runtime check',
           },
           windows: {
             body: 'Recommended Windows install from the latest GitHub Release using PowerShell.',
@@ -188,27 +188,27 @@ export const enMessages: MessageDictionary = {
         },
         sections: {
           architecture: {
-            body: 'Architecturally, Tentgent uses the CLI as a single control surface for models, adapters, datasets, and local deployment flows. The core idea is to let users deploy multiple models at the same time and dynamically switch adapters, enabling one base model to support several distinct application behaviors.',
+            body: 'The current architecture centers on a Rust CLI, a daemon REST surface, and a shared Python model-runtime daemon. Local servers now run through a Rust proxy that binds a selected model or capability and forwards requests into the shared runtime, while cloud provider servers expose compatible OpenAI, Claude, and Gemini chat routes through the same operational surface.',
             title: 'Architecture',
           },
           intro: {
-            body: 'Tentgent is a CLI tool for large language models and extensions. It helps users pull, manage, and run multiple Hugging Face models and adapters according to their needs and available hardware, bringing model acquisition, adapter management, local execution, and application switching into one workflow.',
+            body: 'Tentgent is a local-first AI workflow operator: a Rust CLI plus a local daemon API for managing model runtimes, server routes, datasets, LoRA training, and bounded working sessions on your machine.',
             title: 'Intro',
           },
           runtime: {
-            body: 'The current version supports Hugging Face access key management, importing and using both local and remote models and adapters, and tuning different LoRA adapters with the user’s own datasets so each use case can evolve from the same local toolchain.',
+            body: 'The current release line manages provider keys, content-addressed models, adapters and datasets, one-shot local calls, cloud and local server runtimes, daemon-backed jobs, runtime diagnostics, and capability metadata for chat, embedding, rerank, audio, vision, image, video, and LoRA endpoint families.',
             title: 'Runtime',
           },
           stack: {
-            body: 'Rust, Python, MLX, PEFT, llama.cpp / GGUF, Hugging Face, macOS, Windows',
+            body: 'Rust, Python, MLX, PEFT, Diffusers, MFLUX, llama.cpp / GGUF, Hugging Face, OpenAI, Anthropic, Gemini, macOS, Windows, Linux x86_64 preview',
             title: 'Tech Stack',
           },
           status: {
-            body: 'Future work will connect OpenAI and Claude API keys, then use built-in contracts to generate datasets. The goal is to make it easier to tune multiple application-specific behaviors from the same base model and deploy them locally when needed.',
+            body: 'The latest stable line is v0.5.x. It focuses on the mature model-runtime server path, shared runtime lifecycle, Rust local-server proxy, cloud provider runtimes, runtime bootstrap reliability, and clearer diagnostics. Linux x86_64 release assets are available, but full managed runtime and local backend parity is still treated as a staged rollout.',
             title: 'Status',
           },
         },
-        summary: 'A CLI tool for large language models and adapter-based extensions, built to manage Hugging Face models, local deployment, LoRA tuning, and multi-application switching.',
+        summary: 'A local-first AI workflow operator that combines a Rust CLI, daemon REST APIs, model-runtime management, cloud/local server routes, datasets, LoRA workflows, and bounded working sessions.',
         title: 'Tentgent',
       },
       plantCare: {
