@@ -158,19 +158,19 @@ export const enMessages: MessageDictionary = {
       tentservAgent: {
         commands: [
           {
-            body: 'Inspect the managed runtime, bootstrap state, and missing modules before running model workloads.',
-            command: 'tentgent runtime status',
-            title: 'runtime status',
+            body: 'Pull a model into the local store for later serving, chat, or adapter workflows.',
+            command: 'tentgent model pull mlx-community/Qwen2.5-0.5B-Instruct-4bit',
+            title: 'model pull',
           },
           {
-            body: 'Expose an OpenAI-compatible local server for a cloud model through Tentgent’s Rust server runtime.',
-            command: 'tentgent server run openai:gpt-4.1-mini --host 127.0.0.1 --port 8780',
-            title: 'cloud server',
+            body: 'List locally managed models and confirm the available model refs.',
+            command: 'tentgent model ls',
+            title: 'model ls',
           },
           {
-            body: 'Start the local REST daemon for status, store, dataset, chat, server, training, and session workflows.',
-            command: 'tentgent daemon start --host 127.0.0.1 --port 8790\ncurl -sS http://127.0.0.1:8790/healthz',
-            title: 'daemon API',
+            body: 'Run one chat call with a MODEL_REF returned by model ls.',
+            command: 'tentgent chat <MODEL_REF> --message "user:Hello there"',
+            title: 'chat',
           },
         ],
         install: {
@@ -192,27 +192,27 @@ export const enMessages: MessageDictionary = {
         },
         sections: {
           architecture: {
-            body: 'The current architecture centers on a Rust CLI, a daemon REST surface, and a shared Python model-runtime daemon. Local servers now run through a Rust proxy that binds a selected model or capability and forwards requests into the shared runtime, while cloud provider servers expose compatible OpenAI, Claude, and Gemini chat routes through the same operational surface.',
+            body: 'The architecture uses Rust as the interaction and control layer for the CLI, daemon API, task management, and event handling. The Python runtime manages lower-level model loading, reuse, and release. This lets applications connect through CLI or HTTP without directly handling each backend’s deployment details.',
             title: 'Architecture',
           },
           intro: {
-            body: 'Tentgent is a local-first AI workflow operator: a Rust CLI plus a local daemon API for managing model runtimes, server routes, datasets, LoRA training, and bounded working sessions on your machine.',
+            body: 'Tentgent came from the need to connect a user’s local LLM model into tentserv-chat as an agent. After implementation, it became clear that model deployment would be difficult to manage over time unless it was wrapped properly. That led to the idea of building a CLI tool that connects to different model backends from the lower layer, while also providing a daemon that can be started and connected through HTTP.',
             title: 'Intro',
           },
           runtime: {
-            body: 'The current release line manages provider keys, content-addressed models, adapters and datasets, one-shot local calls, cloud and local server runtimes, daemon-backed jobs, runtime diagnostics, and capability metadata for chat, embedding, rerank, audio, vision, image, video, and LoRA endpoint families.',
+            body: 'The current release line supports cloud relay and managed listener deployment for local models, with automatic or manual resource release. Supported capabilities include chat, embedding, rerank, audio, image, and video, with adapters for model formats or backends such as safetensors, MLX, and GGUF. Some functions support LoRA attachment, and local LoRA tuning currently supports chat models.',
             title: 'Runtime',
           },
           stack: {
-            body: 'Rust, Python, MLX, PEFT, Diffusers, MFLUX, llama.cpp / GGUF, Hugging Face, OpenAI, Anthropic, Gemini, macOS, Windows, Linux x86_64 preview',
-            title: 'Tech Stack',
+            body: 'Tentgent provides both a direct CLI and a long-running daemon HTTP interface. Model operations center on model refs stored in the Tentgent store, so upper-layer applications can call models from different sources and formats through a consistent interface.',
+            title: 'Integration',
           },
           status: {
-            body: 'The latest stable line is v0.5.x. It focuses on the mature model-runtime server path, shared runtime lifecycle, Rust local-server proxy, cloud provider runtimes, runtime bootstrap reliability, and clearer diagnostics. Linux x86_64 release assets are available, but full managed runtime and local backend parity is still treated as a staged rollout.',
+            body: 'The latest stable line is v0.5.x, focused on cloud relay, local server runtime, shared runtime lifecycle, resource release, and diagnostics. Linux x86_64 release assets are available, while full managed runtime and local backend parity are still treated as a staged rollout.',
             title: 'Status',
           },
         },
-        summary: 'A local-first AI workflow operator that combines a Rust CLI, daemon REST APIs, model-runtime management, cloud/local server routes, datasets, LoRA workflows, and bounded working sessions.',
+        summary: 'A CLI / daemon tool for managing cloud relay, local model deployment, runtime lifecycle, and HTTP integration so applications can call different model capabilities through one consistent interface.',
         title: 'Tentgent',
       },
       plantCare: {

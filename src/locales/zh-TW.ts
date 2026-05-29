@@ -157,19 +157,19 @@ export const zhTWMessages: MessageDictionary = {
       tentservAgent: {
         commands: [
           {
-            body: '檢查 managed runtime、bootstrap 狀態與缺少的模組，先確認本機模型工作負載的執行條件。',
-            command: 'tentgent runtime status',
-            title: 'runtime status',
+            body: '拉取模型到本機 store，作為後續部署、對話或 adapter workflow 的基礎。',
+            command: 'tentgent model pull mlx-community/Qwen2.5-0.5B-Instruct-4bit',
+            title: 'model pull',
           },
           {
-            body: '透過 Tentgent 的 Rust server runtime，為雲端模型開出 OpenAI-compatible 的本機 server。',
-            command: 'tentgent server run openai:gpt-4.1-mini --host 127.0.0.1 --port 8780',
-            title: 'cloud server',
+            body: '列出本機已管理的模型，確認可用的 model ref。',
+            command: 'tentgent model ls',
+            title: 'model ls',
           },
           {
-            body: '啟動本機 REST daemon，用同一個 API surface 管理狀態、store、dataset、chat、server、training 與 session workflow。',
-            command: 'tentgent daemon start --host 127.0.0.1 --port 8790\ncurl -sS http://127.0.0.1:8790/healthz',
-            title: 'daemon API',
+            body: '用 model ls 取得的 MODEL_REF 執行一次對話。',
+            command: 'tentgent chat <MODEL_REF> --message "user:Hello there"',
+            title: 'chat',
           },
         ],
         install: {
@@ -191,27 +191,27 @@ export const zhTWMessages: MessageDictionary = {
         },
         sections: {
           architecture: {
-            body: '目前架構以 Rust CLI、daemon REST surface 與共享的 Python model-runtime daemon 為核心。本機 server 會透過 Rust proxy 綁定指定模型或 capability，再把 request 轉送到共享 runtime；雲端 provider server 則透過同一個操作面提供 OpenAI、Claude、Gemini 相容的 chat route。',
+            body: '架構上以 Rust 作為互動與控制基底，負責 CLI、daemon API、任務管理與事件處理；Python runtime 則負責底層模型資源的載入、復用與釋放。這樣應用端可以透過 CLI 或 HTTP 介面串接模型能力，而不需要直接處理不同 backend 的部署細節。',
             title: 'Architecture',
           },
           intro: {
-            body: 'Tentgent 是 local-first 的 AI workflow operator：以 Rust CLI 搭配本機 daemon API，在使用者自己的機器上管理 model runtime、server route、dataset、LoRA training 與 bounded working session。',
+            body: '由於 tentserv-chat 專案需要串接使用者本地的 llm 模型作為 agent 使用，實作後發現若不把模型部署包裝好，未來會很難管理，故萌生了製作從底層與各種不同模型對接的 CLI 工具，並同時兼備 Daemon 可以啟動後透過 http 串接的想法。',
             title: 'Intro',
           },
           runtime: {
-            body: '目前 release line 已支援 provider key 管理、content-addressed model / adapter / dataset store、one-shot local call、雲端與本機 server runtime、daemon job、runtime diagnostics，以及 chat、embedding、rerank、audio、vision、image、video、LoRA 等 endpoint family 的 capability metadata。',
+            body: '目前 release line 支援雲端轉導與本地模型的監聽部署管理，並能自動或手動配置資源釋放。支援能力包含 chat、embedding、rerank、audio、image、video，並適配 safetensors、MLX、GGUF 等模型格式或 backend。部分功能支援 LoRA 掛載，本地 LoRA tuning 目前支援 chat 模型。',
             title: 'Runtime',
           },
           stack: {
-            body: 'Rust、Python、MLX、PEFT、Diffusers、MFLUX、llama.cpp / GGUF、Hugging Face、OpenAI、Anthropic、Gemini、macOS、Windows、Linux x86_64 preview',
-            title: 'Tech Stack',
+            body: '使用方式上，Tentgent 同時提供直接操作的 CLI，以及可常駐啟動的 daemon HTTP 介面。模型操作以儲存在 Tentgent store 中的 model ref 為核心，讓上層應用能用一致方式呼叫不同來源與格式的模型。',
+            title: 'Integration',
           },
           status: {
-            body: '最新 stable line 是 v0.5.x，重點在成熟化 model-runtime server path、共享 runtime lifecycle、Rust local-server proxy、cloud provider runtime、runtime bootstrap 可靠性與更清楚的診斷輸出。Linux x86_64 release asset 已提供，但 full managed runtime 與本機 backend parity 仍以分階段 rollout 看待。',
+            body: '最新 stable line 是 v0.5.x，重點在雲端轉導、本地 server runtime、shared runtime lifecycle、resource release 與診斷輸出。Linux x86_64 release asset 已提供，但完整 managed runtime 與本地 backend parity 仍以分階段 rollout 看待。',
             title: 'Status',
           },
         },
-        summary: '一個 local-first AI workflow operator，結合 Rust CLI、daemon REST API、model-runtime 管理、雲端 / 本機 server route、dataset、LoRA workflow 與 bounded working session。',
+        summary: '一個用來管理雲端轉導、本地模型部署、runtime lifecycle 與 HTTP 串接的 CLI / daemon 工具，讓應用可以用一致方式呼叫不同模型能力。',
         title: 'Tentgent',
       },
       plantCare: {

@@ -158,19 +158,19 @@ export const jaMessages: MessageDictionary = {
       tentservAgent: {
         commands: [
           {
-            body: 'モデルワークロードを動かす前に、managed runtime、bootstrap 状態、不足しているモジュールを確認します。',
-            command: 'tentgent runtime status',
-            title: 'runtime status',
+            body: 'モデルをローカル store に取得し、後続の serving、chat、adapter workflow の土台にします。',
+            command: 'tentgent model pull mlx-community/Qwen2.5-0.5B-Instruct-4bit',
+            title: 'model pull',
           },
           {
-            body: 'Tentgent の Rust server runtime を通して、クラウドモデルを OpenAI-compatible なローカル server として公開します。',
-            command: 'tentgent server run openai:gpt-4.1-mini --host 127.0.0.1 --port 8780',
-            title: 'cloud server',
+            body: 'ローカルで管理されているモデルを一覧し、利用可能な model ref を確認します。',
+            command: 'tentgent model ls',
+            title: 'model ls',
           },
           {
-            body: 'status、store、dataset、chat、server、training、session workflow を扱うローカル REST daemon を起動します。',
-            command: 'tentgent daemon start --host 127.0.0.1 --port 8790\ncurl -sS http://127.0.0.1:8790/healthz',
-            title: 'daemon API',
+            body: 'model ls で取得した MODEL_REF を使って、一度 chat を実行します。',
+            command: 'tentgent chat <MODEL_REF> --message "user:Hello there"',
+            title: 'chat',
           },
         ],
         install: {
@@ -192,27 +192,27 @@ export const jaMessages: MessageDictionary = {
         },
         sections: {
           architecture: {
-            body: '現在のアーキテクチャは、Rust CLI、daemon REST surface、共有 Python model-runtime daemon を中心に構成されています。ローカル server は Rust proxy 経由で指定された model や capability を bind し、request を共有 runtime に転送します。クラウド provider server も同じ操作面から OpenAI、Claude、Gemini compatible な chat route を提供します。',
+            body: 'アーキテクチャは、Rust を interaction / control layer とし、CLI、daemon API、task management、event handling を担当させます。Python runtime は底層のモデル読み込み、再利用、解放を管理します。これにより、アプリケーションは CLI または HTTP 経由で接続でき、backend ごとのデプロイ詳細を直接扱わずに済みます。',
             title: 'Architecture',
           },
           intro: {
-            body: 'Tentgent は local-first な AI workflow operator です。Rust CLI とローカル daemon API により、自分のマシン上で model runtime、server route、dataset、LoRA training、bounded working session を管理します。',
+            body: 'Tentgent は、tentserv-chat プロジェクトでユーザーのローカル LLM モデルを agent として接続する必要から始まりました。実装後、モデルデプロイを適切に包まないと将来的に管理が難しくなることが分かり、底層からさまざまなモデル backend と接続する CLI ツールを作り、同時に daemon として起動して HTTP 経由で接続できる形にする発想につながりました。',
             title: 'Intro',
           },
           runtime: {
-            body: '現在の release line は、provider key 管理、content-addressed model / adapter / dataset store、one-shot local call、クラウドおよびローカル server runtime、daemon job、runtime diagnostics、chat・embedding・rerank・audio・vision・image・video・LoRA endpoint family 向けの capability metadata を扱います。',
+            body: '現在の release line は、クラウド転送とローカルモデルの listener deployment 管理に対応し、リソース解放は自動または手動で制御できます。対応能力は chat、embedding、rerank、audio、image、video で、safetensors、MLX、GGUF などのモデル形式または backend に適配します。一部機能は LoRA のマウントに対応し、ローカル LoRA tuning は現在 chat モデルをサポートしています。',
             title: 'Runtime',
           },
           stack: {
-            body: 'Rust、Python、MLX、PEFT、Diffusers、MFLUX、llama.cpp / GGUF、Hugging Face、OpenAI、Anthropic、Gemini、macOS、Windows、Linux x86_64 preview',
-            title: 'Tech Stack',
+            body: 'Tentgent は、直接操作する CLI と、常駐起動できる daemon HTTP interface の両方を提供します。モデル操作は Tentgent store に保存された model ref を中心に行い、上位アプリケーションが異なる source や format のモデルを一貫した方法で呼び出せるようにします。',
+            title: 'Integration',
           },
           status: {
-            body: '最新 stable line は v0.5.x です。成熟した model-runtime server path、共有 runtime lifecycle、Rust local-server proxy、cloud provider runtime、runtime bootstrap の信頼性、読みやすい diagnostics に重点を置いています。Linux x86_64 release asset は提供されていますが、full managed runtime とローカル backend parity は段階的な rollout として扱われています。',
+            body: '最新 stable line は v0.5.x です。クラウド転送、ローカル server runtime、shared runtime lifecycle、resource release、diagnostics を中心にしています。Linux x86_64 release asset は提供されていますが、full managed runtime と local backend parity は段階的な rollout として扱っています。',
             title: 'Status',
           },
         },
-        summary: 'Rust CLI、daemon REST API、model-runtime 管理、クラウド / ローカル server route、dataset、LoRA workflow、bounded working session を組み合わせた local-first AI workflow operator。',
+        summary: 'クラウド転送、ローカルモデルデプロイ、runtime lifecycle、HTTP 連携を管理する CLI / daemon ツールです。アプリケーションが異なるモデル能力を一貫した方法で呼び出せるようにします。',
         title: 'Tentgent',
       },
       plantCare: {
