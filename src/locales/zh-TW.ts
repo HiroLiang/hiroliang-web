@@ -32,6 +32,10 @@ export const zhTWMessages: MessageDictionary = {
       eyebrow: '隨筆',
       notes: [
         {
+          body: '分享一個今天看到的有趣研究影片，說的是人性本善、人性本惡底層可能是同一套機制。人能在 200 毫秒內辨識出面前對象是不是自己的圈內人；當對方被框在自己人的群體內，催產素會加強對該對象的保護、犧牲、付出，而被劃在外面時，則會傾向排除這個對象。這也讓人不禁想到，當前主流輸出的西方價值觀重視個人想法、自我實現，可能會把人能夠辨識為自己人的群體，壓在單一個體可承載的上限內（照影片說明約 150 人），所以不再有足夠的集體認同。當前所處的社會問題：自私、少子化、不再期待未來、不再有群體意識，雖然不會是單一原因影響，但我想留下這個可能的原因之一，以免自己未來忘記。',
+          date: '2026 年 05 月 16 日',
+        },
+        {
           body: '最近開始嘗試去 tunning LoRA，研究 MLX。從 AI 興起後，我一再追著最新技術跑，慢慢開始有種沒有資本再追新技術的感覺。每個既有技術都會讓我發現，只要你還需要「學習」，就永遠追不上那些已知的人利用 AI 能做到的程度。那我就只能盡量學基本原理，來不及實作，又得再往前學更前緣的東西，想著至少知識量要追上，至少讓自己還保有競爭力。自己做的動態 LoRA 好像也是不錯的展示，但沒有足夠高價的設備，不要說從 pre-train、全矩陣 tunning，就算只掛一個小 LoRA，tunning 時間也很長，能用的模型又小，LoRA 大小也有限。AI 大公司正在建立資本壁壘，沒有資本的人被排斥到只能做那些一步一步被 AI 取代的事。眼看洪水朝眼前撲面而來，大公司卻連救生圈都要從你面前抽走，連一點僥倖的機會都不給。',
           date: '2026 年 04 月 06 日',
         },
@@ -153,31 +157,31 @@ export const zhTWMessages: MessageDictionary = {
       tentservAgent: {
         commands: [
           {
+            body: '拉取模型到本機 store，作為後續部署、對話或 adapter workflow 的基礎。',
+            command: 'tentgent model pull mlx-community/Qwen2.5-0.5B-Instruct-4bit',
+            title: 'model pull',
+          },
+          {
             body: '列出本機已管理的模型，確認可用的 model ref。',
             command: 'tentgent model ls',
             title: 'model ls',
           },
           {
-            body: '從 Hugging Face 拉取一個可測試的小型模型。',
-            command: 'tentgent model pull google/gemma-3-1b-it',
-            title: 'model pull',
-          },
-          {
-            body: '用指定模型執行一次簡單對話。Tentgent 目前以 chat 指令承接 one-shot run。',
-            command: 'tentgent chat <model-ref> --message "user:Hello there"',
-            title: 'model run',
+            body: '用 model ls 取得的 MODEL_REF 執行一次對話。',
+            command: 'tentgent chat <MODEL_REF> --message "user:Hello there"',
+            title: 'chat',
           },
         ],
         install: {
           mac: {
-            body: '推薦從最新 GitHub Release 安裝 macOS 版本。',
-            command: 'curl -fsSL https://github.com/HiroLiang/tentserv-agent/releases/latest/download/install.sh | sh',
-            title: 'macOS',
+            body: 'macOS 建議透過專案 Homebrew tap 安裝。CLI 安裝後，再用 runtime bootstrap 準備 managed Python environment。',
+            command: 'brew tap hiroliang/tap\nbrew install hiroliang/tap/tentgent\ntentgent runtime bootstrap\ntentgent doctor\ntentgent --version',
+            title: 'macOS Homebrew',
           },
           verify: {
-            body: '確認預設安裝路徑可用，並檢查本機 runtime 狀態。',
-            command: 'case ":$PATH:" in\n  *":$HOME/.local/bin:"*) ;;\n  *) export PATH="$HOME/.local/bin:$PATH" ;;\nesac\ntentgent doctor',
-            title: 'Verify',
+            body: '檢查 runtime 狀態，並在需要本機 backend dependency 時 bootstrap 完整 model-runtime profile。',
+            command: 'tentgent runtime status\ntentgent runtime bootstrap --profile full\ntentgent doctor',
+            title: 'Runtime check',
           },
           windows: {
             body: '推薦使用 PowerShell 從最新 GitHub Release 安裝 Windows 版本。',
@@ -187,27 +191,27 @@ export const zhTWMessages: MessageDictionary = {
         },
         sections: {
           architecture: {
-            body: '架構上，Tentgent 以 CLI 作為統一入口，讓模型、adapter、dataset 與本地部署流程可以被同一套指令管理。它的核心設計是讓使用者能夠同時部署多個模型，並在不同 adapter 之間動態切換，形成「單一基礎模型，多種應用能力」的運作方式。',
+            body: '架構上以 Rust 作為互動與控制基底，負責 CLI、daemon API、任務管理與事件處理；Python runtime 則負責底層模型資源的載入、復用與釋放。這樣應用端可以透過 CLI 或 HTTP 介面串接模型能力，而不需要直接處理不同 backend 的部署細節。',
             title: 'Architecture',
           },
           intro: {
-            body: 'Tentgent 是一個支援大語言模型與擴展能力的 CLI 工具，讓使用者可以依照需求與設備條件，拉取、管理並使用多個不同的 Hugging Face 模型與 adapter。它把模型取得、adapter 管理、本地執行與應用切換整合在同一個操作介面裡，降低本地 AI 工具鏈的使用門檻。',
+            body: '由於 tentserv-chat 專案需要串接使用者本地的 llm 模型作為 agent 使用，實作後發現若不把模型部署包裝好，未來會很難管理，故萌生了製作從底層與各種不同模型對接的 CLI 工具，並同時兼備 Daemon 可以啟動後透過 http 串接的想法。',
             title: 'Intro',
           },
           runtime: {
-            body: '目前已支援 Hugging Face Access Key 管理、本地與線上 model / adapter 的匯入與使用，也讓使用者可以用自己的測資 tuning 不同的 LoRA，逐步建立符合特定情境的模型擴展能力。',
+            body: '目前 release line 支援雲端轉導與本地模型的監聽部署管理，並能自動或手動配置資源釋放。支援能力包含 chat、embedding、rerank、audio、image、video，並適配 safetensors、MLX、GGUF 等模型格式或 backend。部分功能支援 LoRA 掛載，本地 LoRA tuning 目前支援 chat 模型。',
             title: 'Runtime',
           },
           stack: {
-            body: 'Rust、Python、MLX、PEFT、llama.cpp / GGUF、Hugging Face、macOS、Windows',
-            title: 'Tech Stack',
+            body: '使用方式上，Tentgent 同時提供直接操作的 CLI，以及可常駐啟動的 daemon HTTP 介面。模型操作以儲存在 Tentgent store 中的 model ref 為核心，讓上層應用能用一致方式呼叫不同來源與格式的模型。',
+            title: 'Integration',
           },
           status: {
-            body: '後續會串接 OpenAI API key 與 Claude API key，並支援使用內建 contract 產出測資，讓使用者更容易針對同一個基礎模型調適出多種應用形態，再依需要部署到本地環境。',
+            body: '最新 stable line 是 v0.5.x，重點在雲端轉導、本地 server runtime、shared runtime lifecycle、resource release 與診斷輸出。Linux x86_64 release asset 已提供，但完整 managed runtime 與本地 backend parity 仍以分階段 rollout 看待。',
             title: 'Status',
           },
         },
-        summary: '一個支援大語言模型與 adapter 擴展的 CLI 工具，用來管理 Hugging Face 模型、本地部署、LoRA tuning 與多應用切換。',
+        summary: '一個用來管理雲端轉導、本地模型部署、runtime lifecycle 與 HTTP 串接的 CLI / daemon 工具，讓應用可以用一致方式呼叫不同模型能力。',
         title: 'Tentgent',
       },
       plantCare: {

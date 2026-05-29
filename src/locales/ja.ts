@@ -32,6 +32,10 @@ export const jaMessages: MessageDictionary = {
       eyebrow: 'ノート',
       notes: [
         {
+          body: '今日見た興味深い研究動画について。性善説と性悪説は、根底では同じ仕組みの二つの表れかもしれない、という話だった。人は目の前の相手が自分の内集団に属するかどうかを 200 ミリ秒以内に識別できる。相手が「自分たち」の枠内に置かれると、オキシトシンによってその相手を守る、犠牲になる、与えるといった傾向が強まり、外側に置かれた相手に対しては排除の方向へ傾きやすいらしい。これを聞くと、現在主流として輸出されている西洋的な価値観、つまり個人の考えや自己実現を重視する価値観についても考えてしまう。人が「自分たち」と認識できる集団を、一人の個人が社会的に抱えられる上限（動画では約 150 人と説明されていた）にまで押し縮めることで、十分な集合的同一性が失われているのかもしれない。今の社会が抱える問題、たとえば利己化、少子化、未来への期待の喪失、集団意識の希薄化は、もちろん単一の原因だけで起きているわけではない。それでも、将来自分が忘れないように、考えられる原因の一つとしてここに残しておきたい。',
+          date: '2026年5月16日',
+        },
+        {
           body: '最近、LoRA のチューニングや MLX の研究を始めた。AI が台頭してから、ずっと最新技術を追い続けてきたけれど、だんだん「もう新技術を追い続けるための資本がない」という感覚が強くなってきた。既存の技術に向き合うたびに、こちらがまだ「学習」している段階である限り、すでに AI を使いこなしている人たちの水準には追いつけないと痛感する。だから結局、せめて基礎原理だけでも学ぼうとするしかない。実装する前に、またさらに先端を学ばなければならず、少なくとも知識量だけは追いつきたい、少なくとも競争力だけは失いたくない、と思っている。自分で作った動的 LoRA は展示として悪くないと思うが、高価な設備が足りない。pre-train や全行列チューニングは言うまでもなく、小さな LoRA を載せるだけでもチューニング時間は長く、使えるモデルは小さく、LoRA のサイズにも限界がある。AI の巨大企業は資本の壁を築いていて、資本のない人間は、AI に少しずつ置き換えられていく仕事しかできない側へ押し出されていく。目の前で洪水が押し寄せてくるのに、大企業は目の前の救命浮輪さえ引き剥がし、わずかな幸運の可能性すら与えない。',
           date: '2026年4月6日',
         },
@@ -154,31 +158,31 @@ export const jaMessages: MessageDictionary = {
       tentservAgent: {
         commands: [
           {
-            body: 'ローカルで管理しているモデルを一覧し、利用する model ref を確認します。',
+            body: 'モデルをローカル store に取得し、後続の serving、chat、adapter workflow の土台にします。',
+            command: 'tentgent model pull mlx-community/Qwen2.5-0.5B-Instruct-4bit',
+            title: 'model pull',
+          },
+          {
+            body: 'ローカルで管理されているモデルを一覧し、利用可能な model ref を確認します。',
             command: 'tentgent model ls',
             title: 'model ls',
           },
           {
-            body: 'Hugging Face から小さなテスト用モデルを取得します。',
-            command: 'tentgent model pull google/gemma-3-1b-it',
-            title: 'model pull',
-          },
-          {
-            body: '選択したモデルで一回だけチャットを実行します。Tentgent では現時点で one-shot run を chat コマンドで扱います。',
-            command: 'tentgent chat <model-ref> --message "user:Hello there"',
-            title: 'model run',
+            body: 'model ls で取得した MODEL_REF を使って、一度 chat を実行します。',
+            command: 'tentgent chat <MODEL_REF> --message "user:Hello there"',
+            title: 'chat',
           },
         ],
         install: {
           mac: {
-            body: '最新の GitHub Release から macOS 版をインストールします。',
-            command: 'curl -fsSL https://github.com/HiroLiang/tentserv-agent/releases/latest/download/install.sh | sh',
-            title: 'macOS',
+            body: 'macOS では project Homebrew tap からのインストールを推奨します。CLI インストール後、runtime bootstrap で managed Python environment を準備します。',
+            command: 'brew tap hiroliang/tap\nbrew install hiroliang/tap/tentgent\ntentgent runtime bootstrap\ntentgent doctor\ntentgent --version',
+            title: 'macOS Homebrew',
           },
           verify: {
-            body: '標準インストール先を PATH に入れ、runtime を確認します。',
-            command: 'case ":$PATH:" in\n  *":$HOME/.local/bin:"*) ;;\n  *) export PATH="$HOME/.local/bin:$PATH" ;;\nesac\ntentgent doctor',
-            title: 'Verify',
+            body: 'runtime 状態を確認し、ローカル backend dependency が必要な場合は full model-runtime profile を bootstrap します。',
+            command: 'tentgent runtime status\ntentgent runtime bootstrap --profile full\ntentgent doctor',
+            title: 'Runtime check',
           },
           windows: {
             body: 'PowerShell で最新の GitHub Release から Windows 版をインストールします。',
@@ -188,27 +192,27 @@ export const jaMessages: MessageDictionary = {
         },
         sections: {
           architecture: {
-            body: 'アーキテクチャとしては、Tentgent は CLI を単一の操作面として使い、モデル、adapter、dataset、ローカルデプロイの流れを同じ指令体系で扱います。複数のモデルを同時に配置し、adapter を動的に切り替えることで、一つの基礎モデルから複数の用途を実現する構成を目指しています。',
+            body: 'アーキテクチャは、Rust を interaction / control layer とし、CLI、daemon API、task management、event handling を担当させます。Python runtime は底層のモデル読み込み、再利用、解放を管理します。これにより、アプリケーションは CLI または HTTP 経由で接続でき、backend ごとのデプロイ詳細を直接扱わずに済みます。',
             title: 'Architecture',
           },
           intro: {
-            body: 'Tentgent は、大規模言語モデルとその拡張を扱うための CLI ツールです。ユーザーの用途や利用できるデバイスに合わせて、複数の Hugging Face モデルや adapter を取得・管理・実行でき、モデル取得、adapter 管理、ローカル実行、用途ごとの切り替えを一つの操作フローにまとめます。',
+            body: 'Tentgent は、tentserv-chat プロジェクトでユーザーのローカル LLM モデルを agent として接続する必要から始まりました。実装後、モデルデプロイを適切に包まないと将来的に管理が難しくなることが分かり、底層からさまざまなモデル backend と接続する CLI ツールを作り、同時に daemon として起動して HTTP 経由で接続できる形にする発想につながりました。',
             title: 'Intro',
           },
           runtime: {
-            body: '現在は Hugging Face Access Key の管理、ローカルおよびオンラインの model / adapter のインポートと利用、さらにユーザー自身の評価データや学習データを使った LoRA tuning をサポートしています。同じツールチェーン上で、用途ごとの adapter を育てていける構成です。',
+            body: '現在の release line は、クラウド転送とローカルモデルの listener deployment 管理に対応し、リソース解放は自動または手動で制御できます。対応能力は chat、embedding、rerank、audio、image、video で、safetensors、MLX、GGUF などのモデル形式または backend に適配します。一部機能は LoRA のマウントに対応し、ローカル LoRA tuning は現在 chat モデルをサポートしています。',
             title: 'Runtime',
           },
           stack: {
-            body: 'Rust、Python、MLX、PEFT、llama.cpp / GGUF、Hugging Face、macOS、Windows',
-            title: 'Tech Stack',
+            body: 'Tentgent は、直接操作する CLI と、常駐起動できる daemon HTTP interface の両方を提供します。モデル操作は Tentgent store に保存された model ref を中心に行い、上位アプリケーションが異なる source や format のモデルを一貫した方法で呼び出せるようにします。',
+            title: 'Integration',
           },
           status: {
-            body: '今後は OpenAI API key と Claude API key の連携に加え、内蔵 contract から測定用データを生成する機能を追加する予定です。同じ基礎モデルから複数の用途に合わせた振る舞いを調整し、必要に応じてローカル環境へ展開しやすくすることを目指しています。',
+            body: '最新 stable line は v0.5.x です。クラウド転送、ローカル server runtime、shared runtime lifecycle、resource release、diagnostics を中心にしています。Linux x86_64 release asset は提供されていますが、full managed runtime と local backend parity は段階的な rollout として扱っています。',
             title: 'Status',
           },
         },
-        summary: '大規模言語モデルと adapter 拡張を扱う CLI ツール。Hugging Face モデル、ローカルデプロイ、LoRA tuning、複数用途への切り替えを管理します。',
+        summary: 'クラウド転送、ローカルモデルデプロイ、runtime lifecycle、HTTP 連携を管理する CLI / daemon ツールです。アプリケーションが異なるモデル能力を一貫した方法で呼び出せるようにします。',
         title: 'Tentgent',
       },
       plantCare: {

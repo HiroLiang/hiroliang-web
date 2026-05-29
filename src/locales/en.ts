@@ -32,6 +32,10 @@ export const enMessages: MessageDictionary = {
       eyebrow: 'Notes',
       notes: [
         {
+          body: 'Sharing an interesting research video I saw today: it argued that “human nature is good” and “human nature is evil” may be two expressions of the same underlying mechanism. People can tell within 200 milliseconds whether the person in front of them belongs to their in-group. When someone is framed as one of us, oxytocin strengthens protective, self-sacrificing, and giving behavior toward that person; when someone is framed as outside the group, the tendency turns toward exclusion. It made me think about the dominant Western values being exported today, which emphasize individual thought and self-realization. Maybe those values compress the group a person can recognize as “one of us” down toward the limit of an individual’s social capacity, which the video described as about 150 people, leaving too little collective identity. Social problems around us, such as selfishness, declining birth rates, loss of expectation for the future, and weaker group consciousness, are certainly not caused by a single factor. Still, I want to leave this possible cause here so I do not forget it later.',
+          date: '2026 / 05 / 16',
+        },
+        {
           body: 'Recently I started trying to tune LoRA and study MLX. Since the rise of AI, I have kept chasing the newest techniques, and slowly I have begun to feel that I no longer have the capital to keep up. Every established technique reminds me that as long as you are still “learning,” you will never catch up to what people already know how to do with AI. So I can only try to learn the fundamentals; before I can even implement them, I have to move forward again to learn something more cutting-edge, telling myself that at least I can keep up in knowledge, at least keep some competitiveness. The dynamic LoRA I built seems like a decent showcase, but without expensive enough hardware, I cannot even talk about pre-training or full-matrix tuning. Even mounting a small LoRA takes a long tuning time, the models I can use are small, and LoRA size is also limited. Big AI companies are building a capital moat. People without capital are being pushed into work that AI is replacing step by step. You can see the flood rushing straight at you, while the big companies pull away even the life buoy in front of your eyes, leaving not even a tiny chance of luck.',
           date: '2026 / 04 / 06',
         },
@@ -154,31 +158,31 @@ export const enMessages: MessageDictionary = {
       tentservAgent: {
         commands: [
           {
-            body: 'List locally managed models and find the model ref you want to use.',
+            body: 'Pull a model into the local store for later serving, chat, or adapter workflows.',
+            command: 'tentgent model pull mlx-community/Qwen2.5-0.5B-Instruct-4bit',
+            title: 'model pull',
+          },
+          {
+            body: 'List locally managed models and confirm the available model refs.',
             command: 'tentgent model ls',
             title: 'model ls',
           },
           {
-            body: 'Pull a small test model from Hugging Face.',
-            command: 'tentgent model pull google/gemma-3-1b-it',
-            title: 'model pull',
-          },
-          {
-            body: 'Run a simple one-shot chat with a selected model. Tentgent currently routes one-shot runs through the chat command.',
-            command: 'tentgent chat <model-ref> --message "user:Hello there"',
-            title: 'model run',
+            body: 'Run one chat call with a MODEL_REF returned by model ls.',
+            command: 'tentgent chat <MODEL_REF> --message "user:Hello there"',
+            title: 'chat',
           },
         ],
         install: {
           mac: {
-            body: 'Recommended macOS install from the latest GitHub Release.',
-            command: 'curl -fsSL https://github.com/HiroLiang/tentserv-agent/releases/latest/download/install.sh | sh',
-            title: 'macOS',
+            body: 'Recommended macOS install through the project Homebrew tap. Runtime bootstrap prepares the managed Python environment after the CLI is installed.',
+            command: 'brew tap hiroliang/tap\nbrew install hiroliang/tap/tentgent\ntentgent runtime bootstrap\ntentgent doctor\ntentgent --version',
+            title: 'macOS Homebrew',
           },
           verify: {
-            body: 'Make sure the default install location is on PATH, then verify the runtime.',
-            command: 'case ":$PATH:" in\n  *":$HOME/.local/bin:"*) ;;\n  *) export PATH="$HOME/.local/bin:$PATH" ;;\nesac\ntentgent doctor',
-            title: 'Verify',
+            body: 'Inspect runtime state and bootstrap the full model-runtime profile when local backend dependencies are needed.',
+            command: 'tentgent runtime status\ntentgent runtime bootstrap --profile full\ntentgent doctor',
+            title: 'Runtime check',
           },
           windows: {
             body: 'Recommended Windows install from the latest GitHub Release using PowerShell.',
@@ -188,27 +192,27 @@ export const enMessages: MessageDictionary = {
         },
         sections: {
           architecture: {
-            body: 'Architecturally, Tentgent uses the CLI as a single control surface for models, adapters, datasets, and local deployment flows. The core idea is to let users deploy multiple models at the same time and dynamically switch adapters, enabling one base model to support several distinct application behaviors.',
+            body: 'The architecture uses Rust as the interaction and control layer for the CLI, daemon API, task management, and event handling. The Python runtime manages lower-level model loading, reuse, and release. This lets applications connect through CLI or HTTP without directly handling each backend’s deployment details.',
             title: 'Architecture',
           },
           intro: {
-            body: 'Tentgent is a CLI tool for large language models and extensions. It helps users pull, manage, and run multiple Hugging Face models and adapters according to their needs and available hardware, bringing model acquisition, adapter management, local execution, and application switching into one workflow.',
+            body: 'Tentgent came from the need to connect a user’s local LLM model into tentserv-chat as an agent. After implementation, it became clear that model deployment would be difficult to manage over time unless it was wrapped properly. That led to the idea of building a CLI tool that connects to different model backends from the lower layer, while also providing a daemon that can be started and connected through HTTP.',
             title: 'Intro',
           },
           runtime: {
-            body: 'The current version supports Hugging Face access key management, importing and using both local and remote models and adapters, and tuning different LoRA adapters with the user’s own datasets so each use case can evolve from the same local toolchain.',
+            body: 'The current release line supports cloud relay and managed listener deployment for local models, with automatic or manual resource release. Supported capabilities include chat, embedding, rerank, audio, image, and video, with adapters for model formats or backends such as safetensors, MLX, and GGUF. Some functions support LoRA attachment, and local LoRA tuning currently supports chat models.',
             title: 'Runtime',
           },
           stack: {
-            body: 'Rust, Python, MLX, PEFT, llama.cpp / GGUF, Hugging Face, macOS, Windows',
-            title: 'Tech Stack',
+            body: 'Tentgent provides both a direct CLI and a long-running daemon HTTP interface. Model operations center on model refs stored in the Tentgent store, so upper-layer applications can call models from different sources and formats through a consistent interface.',
+            title: 'Integration',
           },
           status: {
-            body: 'Future work will connect OpenAI and Claude API keys, then use built-in contracts to generate datasets. The goal is to make it easier to tune multiple application-specific behaviors from the same base model and deploy them locally when needed.',
+            body: 'The latest stable line is v0.5.x, focused on cloud relay, local server runtime, shared runtime lifecycle, resource release, and diagnostics. Linux x86_64 release assets are available, while full managed runtime and local backend parity are still treated as a staged rollout.',
             title: 'Status',
           },
         },
-        summary: 'A CLI tool for large language models and adapter-based extensions, built to manage Hugging Face models, local deployment, LoRA tuning, and multi-application switching.',
+        summary: 'A CLI / daemon tool for managing cloud relay, local model deployment, runtime lifecycle, and HTTP integration so applications can call different model capabilities through one consistent interface.',
         title: 'Tentgent',
       },
       plantCare: {
