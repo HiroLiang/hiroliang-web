@@ -1,6 +1,6 @@
 import { messages } from '@/locales'
 import type { Locale } from '@/locales/types'
-import { useAppStore } from '@/stores/app-store'
+import { useAppStore } from '@/stores/preferences'
 
 export function useLocale() {
   const locale = useAppStore((state) => state.locale)

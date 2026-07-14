@@ -1,32 +1,24 @@
-import { HOME_COMMANDS } from '@/features/home/commands'
+import { HOME_COMMANDS } from '@/features/home/data/home-commands'
+import type {
+  ConversationMessage,
+  ConversationMessageRole,
+  ConversationMessageStatus,
+  ConversationPanelPhase,
+} from '@/components/conversation'
 
 export type HomeCommand = (typeof HOME_COMMANDS)[number]
 
 export type HomePanelType = HomeCommand
 
-export type PanelPhase = 'idle' | 'closing' | 'opening'
+export type PanelPhase = ConversationPanelPhase
 
-export type ChatRole = 'user' | 'assistant' | 'system'
+export type ChatRole = ConversationMessageRole
 
-export type ChatMessageStatus = 'idle' | 'streaming' | 'error'
+export type ChatMessageStatus = ConversationMessageStatus
 
-export type ChatMessage = {
-  id: string
-  content: string
-  role: ChatRole
-  status?: ChatMessageStatus
-}
+export type ChatMessage = ConversationMessage
 
-export type ProjectDetailSection = {
-  bodyKey: string
-  titleKey: string
-}
-
-export type ProjectEntry = {
-  githubUrl: string
-  id: string
-  supportsDownloads?: boolean
-}
+export type { ProjectDetailSection, ProjectEntry } from '@/features/project/types'
 
 export type GameEntry = {
   id: 'snake' | 'gomoku'

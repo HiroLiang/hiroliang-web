@@ -36,10 +36,19 @@ VITE_USE_CUSTOM_FONT=
 - Entry: `src/main.tsx`
 - Router: `src/router/index.tsx`
 - Layout: `src/layouts/app-layout.tsx`
-- State: `src/stores/app-store.ts`
+- App providers: `src/app/providers.tsx`
+- State: `src/stores/preferences/` with `src/stores/app-store.ts` as a compatibility export
 - Locales: `src/locales/`
 - Home feature: `src/features/home/`
-- Shared UI: `src/components/`
+  - Views: `src/features/home/views/`
+  - Components: `src/features/home/components/chat/`, `panels/`, `games/`
+  - Services: `src/features/home/services/`
+  - Hooks: `src/features/home/hooks/`
+- Project feature: `src/features/project/` with project components, catalog, platform detection, and release metadata
+- Reusable conversation render surface: `src/components/conversation/`
+- Shared services/styles: `src/shared/api/`, `src/shared/markdown/`, `src/shared/styles/`, `src/shared/utils/`
+- Shared UI primitives: `src/components/ui/`
+- Global CSS modules: `src/styles/` imported by `src/index.css`
 - Tentserv Chat release metadata: `public/tentserv-releases.json`
 - Site-intro agent prompt guide: `dev-doc/site-intro-agent-adapter-prompts.md`
 
@@ -57,8 +66,11 @@ VITE_USE_CUSTOM_FONT=
 - Routing is hash-based.
 - Use `useMessages()` for localized strings and keep `src/locales/types.ts` in sync when adding new copy.
 - Feature logic should stay inside `src/features/<feature>/`.
+- Keep route files in `src/pages/` thin; put implementation in feature `views/`, `components/`, `hooks/`, and `services/`.
+- Put reusable conversation rendering in `src/components/conversation/`; keep home-only slash commands, panels, and chat orchestration inside `src/features/home/`.
+- Keep reusable project UI and project release logic in `src/features/project/`; Home may compose the feature through `src/features/project/index.ts`.
 - `@/` maps to `src/`.
-- The homepage chat stream is handled in `src/features/home/api.ts`.
+- The homepage chat stream is implemented in `src/features/home/services/chat-stream.service.ts`; `src/features/home/api.ts` is a compatibility export.
 - When changing public project facts, slash-command behavior, note themes, or download support, update `dev-doc/site-intro-agent-adapter-prompts.md` so generated adapter test data stays aligned with the site.
 
 ## Localization guardrails (strict)

@@ -52,13 +52,21 @@ VITE_USE_CUSTOM_FONT=
 
 ## Project Structure
 
-- `src/pages/home-page.tsx`: homepage chat flow and slash-command handling
-- `src/pages/project-page.tsx`: standalone project route
-- `src/layouts/app-layout.tsx`: shared layout and mobile navbar behavior
-- `src/features/home/components.tsx`: homepage panels and shared content sections
-- `src/features/home/games.tsx`: games menu and game entry switching
-- `src/features/home/api.ts`: chat streaming request handling
-- `src/features/home/use-tentserv-releases.ts`: release metadata lookup for Tentserv Chat downloads
+- `src/pages/`: route-facing thin exports
+- `src/components/conversation/`: reusable conversation shell, viewport, message bubble, panel slot, composer, and inline menu render components
+- `src/components/ui/`: shared UI primitives such as button, select, and section shell
+- `src/features/home/views/`: homepage view composition
+- `src/features/home/hooks/`: homepage chat, intro typing, panel transition, and stream placeholder hooks
+- `src/features/home/services/`: chat stream, markdown, message, and command services
+- `src/features/home/components/chat/`: homepage-specific chat wrappers, command menu, and assistant message rendering
+- `src/features/home/components/panels/`: profile, GitHub, notes, and homepage panel composition
+- `src/features/home/components/games/`: games menu plus Snake/Gomoku canvas modules
+- `src/features/project/`: reusable project selector/details, project catalog, release metadata, route view, and platform detection
+- `src/shared/api/`: Axios client, JSON fetch helper, QueryClient, and SSE reader
+- `src/shared/markdown/`: markdown rendering and sanitization service
+- `src/shared/styles/`: theme services and design token helpers
+- `src/styles/`: Tailwind entry, font faces, CSS tokens, base styles, and component shell styles
+- `src/stores/preferences/`: persisted locale/theme preference store
 - `src/locales/en.ts`: English copy
 - `src/locales/zh-TW.ts`: Traditional Chinese copy
 - `src/locales/ja.ts`: Japanese copy

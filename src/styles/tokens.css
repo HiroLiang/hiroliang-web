@@ -1,0 +1,53 @@
+@layer base {
+  :root {
+    --background: 128 22% 6%;
+    --foreground: 78 46% 79%;
+    --card: 130 20% 8%;
+    --card-foreground: 78 46% 79%;
+    --popover: 130 20% 8%;
+    --popover-foreground: 78 46% 79%;
+    --primary: 46 78% 61%;
+    --primary-foreground: 130 20% 8%;
+    --secondary: 127 18% 12%;
+    --secondary-foreground: 78 46% 79%;
+    --muted: 124 16% 11%;
+    --muted-foreground: 75 20% 60%;
+    --accent: 46 78% 61%;
+    --accent-foreground: 130 20% 8%;
+    --destructive: 8 68% 49%;
+    --destructive-foreground: 78 46% 79%;
+    --border: 84 20% 24%;
+    --input: 84 20% 24%;
+    --ring: 46 78% 61%;
+    --radius: 0.9rem;
+    --font-family-default: 'Courier New', 'IBM Plex Mono', 'Menlo', monospace;
+    --font-family-custom: 'LXGW WenKai Mono TC', var(--font-family-default);
+    --font-family-app: var(--font-family-default);
+  }
+
+  :root[data-theme='bright'] {
+    --background: 212 24% 88%;
+    --foreground: 218 16% 20%;
+    --card: 210 25% 99%;
+    --card-foreground: 218 15% 14%;
+    --popover: 210 25% 98%;
+    --popover-foreground: 218 15% 16%;
+    --primary: 213 43% 40%;
+    --primary-foreground: 210 34% 98%;
+    --secondary: 211 21% 93%;
+    --secondary-foreground: 216 14% 24%;
+    --muted: 212 18% 91%;
+    --muted-foreground: 217 11% 40%;
+    --accent: 213 43% 40%;
+    --accent-foreground: 210 34% 98%;
+    --destructive: 5 55% 46%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 212 18% 71%;
+    --input: 212 18% 71%;
+    --ring: 213 43% 40%;
+  }
+
+  :root[data-use-custom-font='true'] {
+    --font-family-app: var(--font-family-custom);
+  }
+}

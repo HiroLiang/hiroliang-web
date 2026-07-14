@@ -4,8 +4,8 @@ import {
   SYSTEM_THEME_MEDIA_QUERY,
   applyResolvedTheme,
   resolveTheme,
-} from '@/lib/theme'
-import { useAppStore } from '@/stores/app-store'
+} from '@/shared/styles/theme'
+import { useAppStore } from '@/stores/preferences'
 
 export function useTheme() {
   const themeMode = useAppStore((state) => state.themeMode)
