@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 
 import {
   Select,
@@ -21,6 +21,8 @@ export function AppHeader({ isMobileHeaderVisible, isMobileViewport }: AppHeader
   const { locale, setLocale } = useLocale()
   const { themeMode, setThemeMode } = useTheme()
   const t = useMessages()
+  const { pathname } = useLocation()
+  const BrandTag = pathname === '/' ? 'h1' : 'span'
   const headerVisibilityClass = isMobileViewport
     ? isMobileHeaderVisible
       ? 'translate-y-0 opacity-100'
@@ -40,9 +42,9 @@ export function AppHeader({ isMobileHeaderVisible, isMobileViewport }: AppHeader
         className="flex min-w-0 shrink items-baseline gap-x-3 gap-y-1 whitespace-nowrap"
         to="/"
       >
-        <span className="truncate text-xs font-semibold uppercase tracking-[0.18em] text-foreground sm:text-sm">
+        <BrandTag className="truncate text-xs font-semibold uppercase tracking-[0.18em] text-foreground sm:text-sm">
           Hiro Liang
-        </span>
+        </BrandTag>
       </NavLink>
 
       <div className="flex shrink-0 items-center gap-2 sm:gap-4">

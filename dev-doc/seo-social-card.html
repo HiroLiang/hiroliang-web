@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex" />
+    <meta name="viewport" content="width=1200" />
+    <title>Hiro Liang social card source</title>
+    <link rel="stylesheet" href="../src/styles/tokens.css" />
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        position: relative;
+        width: 1200px;
+        height: 630px;
+        margin: 0;
+        overflow: hidden;
+        background: hsl(var(--background));
+        color: hsl(var(--foreground));
+        font-family: var(--font-family-default);
+        letter-spacing: 0;
+      }
+      .url {
+        position: absolute;
+        top: 109px;
+        left: 80px;
+        margin: 0;
+        color: hsl(var(--primary));
+        font-size: 26px;
+        line-height: 1.5;
+      }
+      .brand-mark {
+        position: absolute;
+        top: 54px;
+        right: 80px;
+        width: 160px;
+        height: 160px;
+        overflow: hidden;
+        border-radius: 8px;
+        background: hsl(var(--foreground));
+      }
+      .brand-mark img {
+        position: absolute;
+        top: -71px;
+        left: -65px;
+        width: 300px;
+        height: 300px;
+      }
+      .identity {
+        position: absolute;
+        inset: 260px 80px auto;
+        padding-top: 64px;
+        border-top: 1px solid hsl(var(--border));
+      }
+      h1 {
+        margin: 0;
+        font-size: 80px;
+        font-weight: 700;
+        line-height: 1.2;
+      }
+      .role {
+        margin: 20px 0 0;
+        color: hsl(var(--muted-foreground));
+        font-size: 32px;
+        line-height: 1.4;
+      }
+    </style>
+  </head>
+  <body>
+    <p class="url">www.hiroliang.com</p>
+    <div class="brand-mark">
+      <img src="../public/cuttlefish.svg" alt="Hiro Liang brand icon" width="300" height="300" />
+    </div>
+    <div class="identity">
+      <h1>Hiro Liang</h1>
+      <p class="role">Software Engineer</p>
+    </div>
+  </body>
+</html>
