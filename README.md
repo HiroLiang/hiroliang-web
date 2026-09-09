@@ -79,6 +79,14 @@ VITE_USE_CUSTOM_FONT=
 - The homepage remains the primary product surface.
 - Some bundled font assets are large and will affect production bundle size when enabled.
 
+## Tentgent Releases
+
+- Tentgent displays the latest five published stable releases from `HiroLiang/tentserv-agent`, ordered by publication date. Drafts and prereleases (including RC builds) are excluded.
+- `src/features/project/services/tentgent-release.service.ts` reads the public GitHub Releases API through the shared JSON client, follows pagination, and maps actual uploaded assets to macOS Apple Silicon/Intel, Windows x86_64, and Linux x86_64 downloads.
+- The project feature caches release queries for five minutes. API failures, rate limits, and timeouts keep the last available data visible with a retry control; an initial failure uses `src/features/project/data/tentgent-releases.ts` as the bundled fallback. Keep this snapshot aligned with GitHub when updating the website. It was verified on 2026-09-09 with v1.1.1, v1.1.0, v1.0.1, v1.0.0, and v0.9.0.
+- The homepage project panel and `/project` share the same version selector. Release notes, download URLs, and checksums follow the selected version. Tentserv Chat continues to use its separate `public/tentserv-releases.json` metadata.
+- No GitHub token is shipped to the browser. New public releases appear on the next successful refresh without editing locale files or redeploying the site.
+
 ## SEO and Sharing
 
 - `index.html` contains the canonical URL, crawler directives, English Open Graph/Twitter metadata, and linked Person/WebSite JSON-LD. Keep the page title, descriptions, image URLs, and image alternative text aligned when editing them. Only add verified public profiles to `Person.sameAs`.

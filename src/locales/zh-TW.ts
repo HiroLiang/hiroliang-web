@@ -153,6 +153,22 @@ export const zhTWMessages: MessageDictionary = {
     overviewSectionTitle: '專案介紹',
     platformLabel: '平台',
     versionLabel: '版本',
+    releases: {
+      title: '正式版本',
+      loading: '正在確認版本',
+      unavailable: '目前無法取得版本更新，顯示最近可用的版本。',
+      retry: '重新取得版本',
+      published: '發布日期',
+      notes: '版本說明',
+      checksums: '校驗碼',
+      all: '所有版本',
+      platforms: {
+        macArm64: 'macOS (Apple Silicon)',
+        macX64: 'macOS (Intel)',
+        windowsX64: 'Windows (x86_64)',
+        linuxX64: 'Linux (x86_64)',
+      },
+    },
     projects: {
       tentservAgent: {
         commands: [
@@ -207,7 +223,7 @@ export const zhTWMessages: MessageDictionary = {
             title: 'Integration',
           },
           status: {
-            body: '最新 stable line 是 v0.5.x，重點在雲端轉導、本地 server runtime、shared runtime lifecycle、resource release 與診斷輸出。Linux x86_64 release asset 已提供，但完整 managed runtime 與本地 backend parity 仍以分階段 rollout 看待。',
+            body: '正式版本與發布資訊以 GitHub Releases 為準。目前提供 Linux x86_64 CLI 與安裝封裝，但尚未宣稱 Linux 具備完整 managed runtime 與本地模型 backend 的同等支援。',
             title: 'Status',
           },
         },
