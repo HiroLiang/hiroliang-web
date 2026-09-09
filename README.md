@@ -2,7 +2,7 @@
 
 Personal portfolio site built with React, TypeScript, Vite, Tailwind CSS, Zustand, and React Router.
 
-Live site: [hiroliang.com](https://hiroliang.com)
+Live site: [www.hiroliang.com](https://www.hiroliang.com/)
 
 ## Features
 
@@ -78,6 +78,31 @@ VITE_USE_CUSTOM_FONT=
 - The app uses hash-based routing.
 - The homepage remains the primary product surface.
 - Some bundled font assets are large and will affect production bundle size when enabled.
+
+## Tentgent Releases
+
+- Tentgent displays the latest five published stable releases from `HiroLiang/tentserv-agent`, ordered by publication date. Drafts and prereleases (including RC builds) are excluded.
+- `src/features/project/services/tentgent-release.service.ts` reads the public GitHub Releases API through the shared JSON client, follows pagination, and maps actual uploaded assets to macOS Apple Silicon/Intel, Windows x86_64, and Linux x86_64 downloads.
+- The project feature caches release queries for five minutes. API failures, rate limits, and timeouts keep the last available data visible with a retry control; an initial failure uses `src/features/project/data/tentgent-releases.ts` as the bundled fallback. Keep this snapshot aligned with GitHub when updating the website. It was verified on 2026-09-09 with v1.1.1, v1.1.0, v1.0.1, v1.0.0, and v0.9.0.
+- The homepage project panel and `/project` share the same version selector. Release notes, download URLs, and checksums follow the selected version. Tentserv Chat continues to use its separate `public/tentserv-releases.json` metadata.
+- No GitHub token is shipped to the browser. New public releases appear on the next successful refresh without editing locale files or redeploying the site.
+
+## SEO and Sharing
+
+- `index.html` contains the canonical URL, crawler directives, English Open Graph/Twitter metadata, and linked Person/WebSite JSON-LD. Keep the page title, descriptions, image URLs, and image alternative text aligned when editing them. Only add verified public profiles to `Person.sameAs`.
+- The canonical homepage is `https://www.hiroliang.com/`. `public/robots.txt` allows crawling and points to `public/sitemap.xml`, which lists only the homepage. Hash routes and slash-command panels are not separate sitemap entries; add content URLs after implementing path-based routing.
+- `public/og/hiro-liang-social-card.png` is the shared 1200 x 630 PNG. Its editable source is `dev-doc/seo-social-card.html`, which uses the existing brand SVG and design tokens. Open the source in a browser and export a 1200 x 630 screenshot at device scale factor 1 to regenerate the PNG. The source is development-only and is not included in the production build.
+- The homepage brand is an H1 with the existing visual styling. `useDocumentLocale()` runs in `AppProviders` and synchronizes the document language with the persisted preference (`en`, `zh-Hant-TW`, or `ja`). Static SEO copy stays English; there are no `hreflang` entries while locales share one URL.
+
+After updating SEO assets, run `npm run lint` and `npm run build`, then check the production output with `npm run preview`.
+
+After deployment:
+
+1. Clear the Cloudflare cache and confirm the HTTPS www redirect still works.
+2. Check that `/robots.txt` returns plain text, `/sitemap.xml` returns valid XML, and `/og/hiro-liang-social-card.png` returns the 1200 x 630 PNG, all with HTTP 200 instead of the SPA fallback HTML.
+3. Inspect the raw homepage HTML for the canonical link, JSON-LD, and social metadata. Validate the JSON-LD with Schema.org Validator and check the sharing preview with LinkedIn Post Inspector.
+4. Verify the domain in Google Search Console, submit `https://www.hiroliang.com/sitemap.xml`, inspect the homepage, and request indexing.
+5. Link the canonical website from the GitHub and LinkedIn profiles. LinkedIn is intentionally absent from `sameAs` until its public URL is confirmed.
 
 ## Content and Localization
 

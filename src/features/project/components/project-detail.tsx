@@ -8,6 +8,7 @@ import { useMessages } from '@/hooks/use-locale'
 
 import { CommandBlock } from './command-block'
 import { ProjectDownloadContent } from './project-download-content'
+import { TentgentReleases } from './tentgent-releases'
 
 function TentservProjectDetail({ project, showRouteLink = false }: { project: ProjectEntry; showRouteLink?: boolean }) {
   const t = useMessages()
@@ -88,6 +89,8 @@ function TentservAgentProjectDetail({ project }: { project: ProjectEntry }) {
         {content.title}
       </h2>
       <p className="text-base leading-8 text-muted-foreground">{content.summary}</p>
+
+      <TentgentReleases />
 
       <div className="space-y-3">
         <h3 className="text-lg font-semibold text-foreground">{t.project.overviewSectionTitle}</h3>

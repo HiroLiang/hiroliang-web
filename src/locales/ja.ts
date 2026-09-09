@@ -154,6 +154,22 @@ export const jaMessages: MessageDictionary = {
     overviewSectionTitle: '概要',
     platformLabel: 'プラットフォーム',
     versionLabel: 'バージョン',
+    releases: {
+      title: '正式リリース',
+      loading: 'リリースを確認中',
+      unavailable: 'リリースの更新を取得できません。最後に取得したバージョンを表示しています。',
+      retry: 'リリースを再取得',
+      published: '公開日',
+      notes: 'リリースノート',
+      checksums: 'チェックサム',
+      all: 'すべてのリリース',
+      platforms: {
+        macArm64: 'macOS (Apple Silicon)',
+        macX64: 'macOS (Intel)',
+        windowsX64: 'Windows (x86_64)',
+        linuxX64: 'Linux (x86_64)',
+      },
+    },
     projects: {
       tentservAgent: {
         commands: [
@@ -208,7 +224,7 @@ export const jaMessages: MessageDictionary = {
             title: 'Integration',
           },
           status: {
-            body: '最新 stable line は v0.5.x です。クラウド転送、ローカル server runtime、shared runtime lifecycle、resource release、diagnostics を中心にしています。Linux x86_64 release asset は提供されていますが、full managed runtime と local backend parity は段階的な rollout として扱っています。',
+            body: '正式バージョンと公開情報は GitHub Releases で確認できます。Linux x86_64 の CLI とインストール用アーカイブは提供されていますが、Linux での full managed runtime とローカルモデル backend の同等サポートはまだ保証していません。',
             title: 'Status',
           },
         },

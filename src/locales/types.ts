@@ -120,6 +120,22 @@ export type MessageDictionary = {
     overviewSectionTitle: string
     platformLabel: string
     versionLabel: string
+    releases: {
+      title: string
+      loading: string
+      unavailable: string
+      retry: string
+      published: string
+      notes: string
+      checksums: string
+      all: string
+      platforms: {
+        macArm64: string
+        macX64: string
+        windowsX64: string
+        linuxX64: string
+      }
+    }
     projects: {
       plantCare: {
         sections: {

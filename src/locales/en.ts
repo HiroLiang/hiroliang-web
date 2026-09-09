@@ -154,6 +154,22 @@ export const enMessages: MessageDictionary = {
     overviewSectionTitle: 'Overview',
     platformLabel: 'Platform',
     versionLabel: 'Version',
+    releases: {
+      title: 'Stable releases',
+      loading: 'Checking releases',
+      unavailable: 'Release updates are unavailable. Showing the last available versions.',
+      retry: 'Retry release updates',
+      published: 'Published',
+      notes: 'Release notes',
+      checksums: 'Checksums',
+      all: 'All releases',
+      platforms: {
+        macArm64: 'macOS (Apple Silicon)',
+        macX64: 'macOS (Intel)',
+        windowsX64: 'Windows (x86_64)',
+        linuxX64: 'Linux (x86_64)',
+      },
+    },
     projects: {
       tentservAgent: {
         commands: [
@@ -208,7 +224,7 @@ export const enMessages: MessageDictionary = {
             title: 'Integration',
           },
           status: {
-            body: 'The latest stable line is v0.5.x, focused on cloud relay, local server runtime, shared runtime lifecycle, resource release, and diagnostics. Linux x86_64 release assets are available, while full managed runtime and local backend parity are still treated as a staged rollout.',
+            body: 'Stable versions and release details are published on GitHub Releases. Linux x86_64 CLI and install archives are available, but full managed runtime and local model backend parity are not yet claimed on Linux.',
             title: 'Status',
           },
         },
