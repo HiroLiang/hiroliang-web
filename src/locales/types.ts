@@ -1,10 +1,5 @@
 export type Locale = 'en' | 'zh-TW' | 'ja'
 
-export type ExperienceNote = {
-  body: string
-  date: string
-}
-
 export type MessageDictionary = {
   localeLabel: string
   locales: Record<Locale, string>
@@ -27,7 +22,8 @@ export type MessageDictionary = {
     }
     experience: {
       eyebrow: string
-      notes: ExperienceNote[]
+      nextPage: string
+      previousPage: string
       title: string
     }
     featured: {

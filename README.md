@@ -30,6 +30,7 @@ npm run dev
 npm run build
 npm run lint
 npm run preview
+npm run validate:notes
 ```
 
 ## Environment Variables
@@ -60,7 +61,9 @@ VITE_USE_CUSTOM_FONT=
 - `src/features/home/services/`: chat stream, markdown, message, and command services
 - `src/features/home/components/chat/`: homepage-specific chat wrappers, command menu, and assistant message rendering
 - `src/features/home/components/panels/`: profile, GitHub, notes, and homepage panel composition
+- `src/features/home/components/notes/`: note cards and pagination controls
 - `src/features/home/components/games/`: games menu plus Snake/Gomoku canvas modules
+- `src/features/home/data/notes/`: file-driven English, Traditional Chinese, and Japanese Markdown notes
 - `src/features/project/`: reusable project selector/details, project catalog, release metadata, route view, and platform detection
 - `src/shared/api/`: Axios client, JSON fetch helper, QueryClient, and SSE reader
 - `src/shared/markdown/`: markdown rendering and sanitization service
@@ -106,7 +109,8 @@ After deployment:
 
 ## Content and Localization
 
-- Public copy lives in `src/locales/`; keep the three locale files aligned when adding project text, UI labels, or notes.
-- `home.experience.notes` should keep the same order and count across `en`, `zh-TW`, and `ja`.
-- Note dates use locale-specific formats: `YYYY / MM / DD` for English, `YYYY 年 MM 月 DD 日` for Traditional Chinese, and `YYYY年M月D日` for Japanese.
+- Public UI and project copy lives in `src/locales/`; keep the three locale files aligned when adding localized labels or project text.
+- Note content lives in `src/features/home/data/notes/` and uses `<YYYY-MM-DD>-<slug>.<locale>.md` filenames.
+- Every note ID must have one `en`, one `zh-TW`, and one `ja` Markdown file with equivalent meaning. Run `npm run validate:notes` before committing new content.
+- Note dates are derived from filenames and formatted for each locale automatically.
 - The site-intro adapter prompt guide should only describe public site facts. Avoid adding private background, unsupported release claims, download counts, benchmark scores, or security-audit claims that are not present on the site.

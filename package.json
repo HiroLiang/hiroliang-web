@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "npm run validate:notes && tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "validate:notes": "node scripts/validate-notes.mjs"
   },
   "dependencies": {
     "@radix-ui/react-select": "^2.2.6",

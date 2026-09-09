@@ -30,28 +30,8 @@ export const enMessages: MessageDictionary = {
     },
     experience: {
       eyebrow: 'Notes',
-      notes: [
-        {
-          body: 'Sharing an interesting research video I saw today: it argued that “human nature is good” and “human nature is evil” may be two expressions of the same underlying mechanism. People can tell within 200 milliseconds whether the person in front of them belongs to their in-group. When someone is framed as one of us, oxytocin strengthens protective, self-sacrificing, and giving behavior toward that person; when someone is framed as outside the group, the tendency turns toward exclusion. It made me think about the dominant Western values being exported today, which emphasize individual thought and self-realization. Maybe those values compress the group a person can recognize as “one of us” down toward the limit of an individual’s social capacity, which the video described as about 150 people, leaving too little collective identity. Social problems around us, such as selfishness, declining birth rates, loss of expectation for the future, and weaker group consciousness, are certainly not caused by a single factor. Still, I want to leave this possible cause here so I do not forget it later.',
-          date: '2026 / 05 / 16',
-        },
-        {
-          body: 'Recently I started trying to tune LoRA and study MLX. Since the rise of AI, I have kept chasing the newest techniques, and slowly I have begun to feel that I no longer have the capital to keep up. Every established technique reminds me that as long as you are still “learning,” you will never catch up to what people already know how to do with AI. So I can only try to learn the fundamentals; before I can even implement them, I have to move forward again to learn something more cutting-edge, telling myself that at least I can keep up in knowledge, at least keep some competitiveness. The dynamic LoRA I built seems like a decent showcase, but without expensive enough hardware, I cannot even talk about pre-training or full-matrix tuning. Even mounting a small LoRA takes a long tuning time, the models I can use are small, and LoRA size is also limited. Big AI companies are building a capital moat. People without capital are being pushed into work that AI is replacing step by step. You can see the flood rushing straight at you, while the big companies pull away even the life buoy in front of your eyes, leaving not even a tiny chance of luck.',
-          date: '2026 / 04 / 06',
-        },
-        {
-          body: 'If we cannot use imagination to sense what life could be, it suggests a gap between the world we live in and reality.',
-          date: '2026 / 04 / 03',
-        },
-        {
-          body: 'As AI continues to evolve, I do not fully agree with the idea that it will simply eliminate junior roles. What feels closer to reality is that the nature of work itself is being redefined. Just as automation replaced traditional craftsmanship, junior engineers are no longer only learning how to build, but are also expected much earlier to operate systems, tune parameters, understand why failures happen, and handle basic maintenance and optimization. In many ways, this means earlier exposure to abilities that used to belong more clearly to senior roles; meanwhile, purely manual skills that do not interact with systems will have less and less space in scalable environments.',
-          date: '2026 / 02 / 05',
-        },
-        {
-          body: 'AI makes many capabilities that once took years to accumulate much more accessible. The gap in information and technical skill is shrinking, but that does not make competition easier; if anything, it raises the bar. The real differentiator is shifting toward the ability to understand problems across domains, to use AI as a tool rather than a crutch, and to build workable solutions in unfamiliar areas. A single language, or a single narrowly defined role, no longer feels like a durable advantage. What I am intentionally developing instead is cross-domain understanding, extending beyond software engineering itself into system and platform design, user experience, product thinking, and even design, content, business, and market awareness. The goal is not to master everything, but to quickly understand, adapt, and build something usable when needed.',
-          date: '2026 / 02 / 05',
-        },
-      ],
+      nextPage: 'Next page',
+      previousPage: 'Previous page',
       title: 'Thoughts Beyond Building Systems',
     },
     featured: {
